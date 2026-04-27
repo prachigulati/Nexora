@@ -1,0 +1,778 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrepreneurship Hub - Nexora</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    :root {
+      --primary: #6366f1;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --light: #f8fafc;
+      --dark: #0f172a;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-900: #111827;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      margin: 0;
+      padding: 0;
+    }
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 100%);
+      color: #fff;
+      padding: 6rem 0 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section .container {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #fff 60%, #e0e7ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 1.3rem;
+      font-weight: 400;
+      opacity: 0.95;
+      margin-bottom: 2.2rem;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn-hero {
+      padding: 0.9rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      margin: 0 0.5rem 0.5rem 0;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .btn-hero:hover {
+      background: rgba(255,255,255,0.28);
+      color: #fff;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+    }
+    /* Cards Section */
+    .main-cards-section {
+      background: #fff;
+      padding: 3rem 0 2rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(99,102,241,0.07);
+      padding: 2.2rem 1.5rem 1.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: 320px;
+      transition: box-shadow 0.3s, transform 0.3s;
+      border: 1px solid var(--gray-200);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.7s forwards;
+    }
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    .feature-card:hover {
+      box-shadow: 0 8px 32px rgba(99,102,241,0.13);
+      transform: translateY(-6px) scale(1.03);
+    }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feature-card .icon {
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 1.1rem;
+    }
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      color: var(--primary);
+    }
+    .feature-card p {
+      color: var(--gray-600);
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      flex: 1;
+    }
+    .feature-card button, .feature-card .btn-download {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 0;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .feature-card button:hover, .feature-card .btn-download:hover {
+      background: var(--secondary);
+    }
+    /* Roadmap Section */
+    .roadmap-section {
+      background: linear-gradient(120deg, var(--gray-100) 0%, #fff 100%);
+      padding: 4rem 0 3rem;
+    }
+    .roadmap-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .roadmap-desc {
+      font-size: 1.15rem;
+      color: var(--gray-600);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .roadmap-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .roadmap-step {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(99,102,241,0.07);
+      padding: 2.2rem 1.5rem 1.7rem;
+      border: 1px solid var(--gray-200);
+      transition: box-shadow 0.3s, transform 0.3s;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.7s forwards;
+    }
+    .roadmap-step:nth-child(1) { animation-delay: 0.1s; }
+    .roadmap-step:nth-child(2) { animation-delay: 0.2s; }
+    .roadmap-step:nth-child(3) { animation-delay: 0.3s; }
+    .roadmap-step:nth-child(4) { animation-delay: 0.4s; }
+    .roadmap-step:hover {
+      box-shadow: 0 8px 32px rgba(99,102,241,0.13);
+      transform: translateY(-6px) scale(1.03);
+    }
+    .step-number {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.13);
+    }
+    .step-emoji {
+      font-size: 2rem;
+      margin-bottom: 0.7rem;
+      display: block;
+    }
+    .step-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .step-description {
+      color: var(--gray-600);
+      font-size: 1rem;
+      margin-bottom: 1.1rem;
+    }
+    .step-features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.2rem;
+    }
+    .step-features li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: var(--gray-600);
+      font-size: 0.98rem;
+    }
+    .step-features li i {
+      color: var(--success);
+      margin-right: 0.6rem;
+      font-size: 1rem;
+    }
+    .btn-step {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.3rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-step:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-title { font-size: 2.1rem; }
+      .main-cards-section, .roadmap-section { padding: 2rem 0; }
+      .feature-card, .roadmap-step { min-height: 260px; padding: 1.2rem 1rem; }
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 1.4rem; }
+      .hero-section { padding: 3rem 0 2rem; }
+      .main-cards-section, .roadmap-section { padding: 1rem 0; }
+      .card-grid, .roadmap-steps { gap: 1.2rem; }
+    }
+    .msc-modal {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.35); /* semi-transparent dark overlay */
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.2s;
+    }
+    .msc-modal.show {
+      display: flex;
+    }
+    .msc-modal-content {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(99,102,241,0.13);
+      padding: 2.5rem 2rem 2rem;
+      width: 95%;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
+      animation: fadeInUp 0.5s;
+    }
+    .msc-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      font-size: 24px;
+      color: #888;
+      cursor: pointer;
+    }
+    .msc-input-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .msc-input-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .msc-input-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .msc-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .msc-btn:hover {
+      background: var(--secondary);
+    }
+    .msc-result {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  {% if user.is_authenticated %}
+<nav
+  class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top"
+>
+  <div class="container-fluid px-4">
+    <!-- Brand -->
+    <a
+      class="navbar-brand fw-bold fs-3"
+      href="{% url 'home' %}"
+      style="color: #7c3aed"
+    >
+      <i class="bi bi-hexagon-fill me-2"></i>Nexora
+    </a>
+    <!-- Mobile Toggle Button -->
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Center Navigation Links -->
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'home' %}">
+            <i class="bi bi-house-door me-1"></i>Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'about' %}">
+            <i class="bi bi-info-circle me-1"></i>About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'features' %}">
+            <i class="bi bi-star me-1"></i>Features
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'contact' %}">
+            <i class="bi bi-envelope me-1"></i>Contact
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'ai_mentorship' %}">
+            <i class="bi bi-robot me-1"></i>AI Mentorship
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3 position-relative" href="/messaging">
+            <i class="bi bi-chat-dots me-1"></i>Messages
+            {% if unread_direct_messages_count > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+              {{ unread_direct_messages_count }}
+            </span>
+            {% endif %}
+          </a>
+        </li>
+      </ul>
+      <!-- Right Side Actions -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- Notifications -->
+        <a
+          href="{% url 'notifications' %}"
+          class="btn btn-outline-primary position-relative"
+          id="notificationBell"
+        >
+          <i class="bi bi-bell"></i>
+          {% if unread_notifications_count > 0 %}
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            id="notificationBadge"
+          >
+            {{ unread_notifications_count }}
+          </span>
+          {% endif %}
+        </a>
+        <!-- User Dropdown -->
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-person-circle me-2"></i><span>{{ user.get_full_name|default:user.username }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="bi bi-person me-2"></i>Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'settings' %}">
+                <i class="bi bi-gear me-2"></i>Settings
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <form action="{% url 'logout' %}" method="post" class="d-inline w-100">
+                {% csrf_token %}
+                <button class="dropdown-item text-danger" type="submit">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endif %}
+  <main>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">From Idea to <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Empire</span></h1>
+        <p class="hero-subtitle">Master the complete entrepreneurial journey with our step-by-step guide. Transform your ideas into thriving businesses with proven strategies and actionable frameworks.</p>
+        <a href="#roadmap" class="btn-hero"><i class="bi bi-rocket-takeoff"></i> Start Your Journey</a>
+    </div>
+  </section>
+    <!-- Cards Section -->
+    <section class="main-cards-section">
+      <div class="card-grid">
+        <div class="feature-card">
+          <span class="icon"><i class="bi bi-question-circle"></i></span>
+          <h3>Startup Readiness Quiz</h3>
+          <p>Assess your preparedness to start your entrepreneurial journey.</p>
+          <button data-bs-toggle="modal" data-bs-target="#quizModal">Take Quiz</button>
+      </div>
+        <div class="feature-card">
+          <span class="icon"><i class="bi bi-easel"></i></span>
+          <h3>Pitch Deck Template</h3>
+          <p>Download our proven pitch deck template used by successful startups.</p>
+          <button class="btn-download" onclick="downloadDeck()">Download</button>
+            </div>
+        <div class="feature-card">
+          <span class="icon"><i class="bi bi-list-check"></i></span>
+          <h3>Funding Checklist</h3>
+          <p>Essential items to prepare before seeking investment.</p>
+          <button data-bs-toggle="modal" data-bs-target="#fundingChecklistModal">Get Checklist</button>
+            </div>
+        <div class="feature-card">
+          <span class="icon"><i class="bi bi-graph-up"></i></span>
+          <h3>Market Size Calculator</h3>
+          <p>Calculate your total addressable market (TAM) size.</p>
+          <button onclick="openModal()">Calculate Now</button>
+      </div>
+    </div>
+  </section>
+  <!-- Roadmap Section -->
+  <section id="roadmap" class="roadmap-section">
+    <h2 class="roadmap-title">From Ideas to <span style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Execution</span></h2>
+    <p class="roadmap-desc">Your interactive journey to entrepreneurial success. Master each phase with proven strategies, expert insights, and actionable frameworks.</p>
+    <div class="roadmap-flowchart">
+      <div class="flow-step" data-step="1">
+        <div class="flow-card">
+          <div class="step-number">1</div>
+          <span class="step-emoji">💡</span>
+          <div class="step-title">Ideation & Discovery</div>
+          <div class="step-description">Transform problems into opportunities. Learn systematic approaches to identify market gaps, validate pain points, and generate breakthrough business ideas.</div>
+          <ul class="step-features">
+            <li><i class="bi bi-check-circle"></i>Market research methodologies</li>
+            <li><i class="bi bi-check-circle"></i>Problem identification frameworks</li>
+            <li><i class="bi bi-check-circle"></i>Customer interview techniques</li>
+            <li><i class="bi bi-check-circle"></i>Competitive analysis strategies</li>
+            <li><i class="bi bi-check-circle"></i>Opportunity assessment tools</li>
+          </ul>
+          <a href="/blog/ideation/" class="btn-step"><i class="bi bi-arrow-right"></i> Explore Ideation</a>
+        </div>
+        <svg class="flow-arrow" width="32" height="60" viewBox="0 0 32 60"><path d="M16 0v50M16 50l-8-8M16 50l8-8" stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="flow-step" data-step="2">
+        <div class="flow-card">
+          <div class="step-number">2</div>
+          <span class="step-emoji">🔍</span>
+          <div class="step-title">Validation & Testing</div>
+          <div class="step-description">Prove your concept before you build. Master lean startup methodologies to validate assumptions, test market demand, and achieve product-market fit.</div>
+          <ul class="step-features">
+            <li><i class="bi bi-check-circle"></i>Lean startup methodology</li>
+            <li><i class="bi bi-check-circle"></i>MVP development strategies</li>
+            <li><i class="bi bi-check-circle"></i>A/B testing frameworks</li>
+            <li><i class="bi bi-check-circle"></i>Customer validation techniques</li>
+            <li><i class="bi bi-check-circle"></i>Pivot decision frameworks</li>
+          </ul>
+          <a href="/blog/validation/" class="btn-step"><i class="bi bi-arrow-right"></i> Master Validation</a>
+        </div>
+        <svg class="flow-arrow" width="32" height="60" viewBox="0 0 32 60"><path d="M16 0v50M16 50l-8-8M16 50l8-8" stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="flow-step" data-step="3">
+        <div class="flow-card">
+          <div class="step-number">3</div>
+          <span class="step-emoji">👥</span>
+          <div class="step-title">Team Building</div>
+          <div class="step-description">Build your dream team. Learn how to find co-founders, define roles, distribute equity fairly, and create a strong company culture from day one.</div>
+          <ul class="step-features">
+            <li><i class="bi bi-check-circle"></i>Co-founder matching strategies</li>
+            <li><i class="bi bi-check-circle"></i>Equity distribution models</li>
+            <li><i class="bi bi-check-circle"></i>Role definition frameworks</li>
+            <li><i class="bi bi-check-circle"></i>Culture building techniques</li>
+            <li><i class="bi bi-check-circle"></i>Legal structure setup</li>
+          </ul>
+          <a href="/blog/team-building/" class="btn-step"><i class="bi bi-arrow-right"></i> Build Your Team</a>
+        </div>
+        <svg class="flow-arrow" width="32" height="60" viewBox="0 0 32 60"><path d="M16 0v50M16 50l-8-8M16 50l8-8" stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="flow-step" data-step="4">
+        <div class="flow-card">
+          <div class="step-number">4</div>
+          <span class="step-emoji">🚀</span>
+          <div class="step-title">MVP Development</div>
+          <div class="step-description">Build smart, not hard. Master the art of creating minimum viable products that deliver maximum learning with minimal resources and time investment.</div>
+          <ul class="step-features">
+            <li><i class="bi bi-check-circle"></i>Feature prioritization methods</li>
+            <li><i class="bi bi-check-circle"></i>Rapid prototyping techniques</li>
+            <li><i class="bi bi-check-circle"></i>No-code/low-code solutions</li>
+            <li><i class="bi bi-check-circle"></i>User experience design</li>
+            <li><i class="bi bi-check-circle"></i>Technical architecture basics</li>
+          </ul>
+          <a href="/blog/mvp-development/" class="btn-step"><i class="bi bi-arrow-right"></i> Develop Your MVP</a>
+        </div>
+        <svg class="flow-arrow" width="32" height="60" viewBox="0 0 32 60"><path d="M16 0v50M16 50l-8-8M16 50l8-8" stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="flow-step" data-step="5">
+        <div class="flow-card">
+          <div class="step-number">5</div>
+          <span class="step-emoji">🎯</span>
+          <div class="step-title">Launch & Marketing</div>
+          <div class="step-description">Go to market with confidence. Master go-to-market strategies, customer acquisition channels, and growth marketing techniques to scale your business effectively.</div>
+          <ul class="step-features">
+            <li><i class="bi bi-check-circle"></i>Go-to-market strategy development</li>
+            <li><i class="bi bi-check-circle"></i>Customer acquisition channels</li>
+            <li><i class="bi bi-check-circle"></i>Growth marketing tactics</li>
+            <li><i class="bi bi-check-circle"></i>Brand building strategies</li>
+            <li><i class="bi bi-check-circle"></i>Performance metrics & KPIs</li>
+          </ul>
+          <a href="/blog/launch-marketing/" class="btn-step"><i class="bi bi-arrow-right"></i> Launch Successfully</a>
+        </div>
+        <svg class="flow-arrow" width="32" height="60" viewBox="0 0 32 60"><path d="M16 0v50M16 50l-8-8M16 50l8-8" stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="flow-step" data-step="6">
+        <div class="flow-card">
+          <div class="step-number">6</div>
+          <span class="step-emoji">📈</span>
+          <div class="step-title">Scaling & Growth</div>
+          <div class="step-description">Scale sustainably and profitably. Learn advanced growth strategies, funding options, international expansion, and how to build systems that scale.</div>
+          <ul class="step-features">
+            <li><i class="bi bi-check-circle"></i>Funding and investment strategies</li>
+            <li><i class="bi bi-check-circle"></i>International market expansion</li>
+            <li><i class="bi bi-check-circle"></i>Operations scaling frameworks</li>
+            <li><i class="bi bi-check-circle"></i>Advanced growth tactics</li>
+            <li><i class="bi bi-check-circle"></i>Exit strategy planning</li>
+          </ul>
+          <a href="/blog/scaling-growth/" class="btn-step"><i class="bi bi-arrow-right"></i> Scale Your Business</a>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Animate steps and arrows on scroll
+      document.addEventListener('DOMContentLoaded', function() {
+        const steps = document.querySelectorAll('.flow-step');
+        const arrows = document.querySelectorAll('.flow-arrow');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+            }
+          });
+        }, { threshold: 0.3 });
+        steps.forEach((step, idx) => {
+          observer.observe(step);
+          // Animate arrow after step is in view
+          if (arrows[idx]) {
+            observer.observe(arrows[idx]);
+          }
+        });
+      });
+    </script>
+    <style>
+      .roadmap-flowchart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        margin: 0 auto;
+        max-width: 600px;
+        position: relative;
+      }
+      .flow-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.7s cubic-bezier(.4,2,.3,1), transform 0.7s cubic-bezier(.4,2,.3,1);
+        margin-bottom: 0;
+        position: relative;
+      }
+      .flow-step.in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .flow-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 4px 16px rgba(99,102,241,0.09);
+        border: 1.5px solid #ede9fe;
+        padding: 2.2rem 1.5rem 1.7rem;
+        margin-bottom: 0;
+        width: 100%;
+        max-width: 420px;
+        z-index: 2;
+        position: relative;
+        transition: box-shadow 0.3s, transform 0.3s;
+      }
+      .flow-card:hover {
+        box-shadow: 0 12px 32px rgba(124,58,237,0.13);
+        transform: scale(1.03);
+      }
+      .flow-arrow {
+        margin: -8px 0 0 0;
+        opacity: 0;
+        transform: translateY(20px) scaleY(0.7);
+        transition: opacity 0.7s 0.2s, transform 0.7s 0.2s;
+        z-index: 1;
+        display: block;
+      }
+      .flow-step.in-view + .flow-arrow,
+      .flow-arrow.in-view {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+      }
+      @media (max-width: 700px) {
+        .roadmap-flowchart { max-width: 98vw; }
+        .flow-card { max-width: 98vw; }
+      }
+    </style>
+  </section>
+  </main>
+  <!-- Quiz Modal -->
+<div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-scrollable">
+      <div class="modal-content">
+        <div class="modal-body" id="quizModalBody">
+          <iframe src="{% static 'quiz.html' %}" width="100%" height="620px" style="border: none;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+      <!-- Funding Checklist Modal -->
+<div class="modal fade" id="fundingChecklistModal" tabindex="-1" aria-labelledby="fundingChecklistLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-scrollable">
+      <div class="modal-content">
+        <div class="modal-body" style="padding: 0;">
+          <iframe src="{% static 'funding-checklist.html' %}" width="100%" height="700px" style="border: none;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Market Size Calculator Modal -->
+  <div class="msc-modal" id="tamModal">
+    <div class="msc-modal-content">
+      <span class="msc-close-btn" onclick="closeModal()">&times;</span>
+      <h2>Market Size Calculator</h2>
+      <p>Calculate your total addressable market (TAM) size.</p>
+      <div class="msc-input-group">
+        <label for="customers">Total Potential Customers</label>
+        <input type="number" id="customers" placeholder="e.g., 10000" />
+      </div>
+      <div class="msc-input-group">
+        <label for="revenue">Average Revenue per Customer ($)</label>
+        <input type="number" id="revenue" placeholder="e.g., 50" />
+      </div>
+      <button class="msc-btn" onclick="calculateTAM()">Calculate Now</button>
+      <div class="msc-result" id="result"></div>
+    </div>
+  </div>
+<script>
+    function downloadDeck() {
+      const fileUrl = "{% static 'ppt/NEXORA_Styled_Pitch_Deck.pptx' %}";
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = 'NEXORA_Styled_Pitch_Deck.pptx';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    function openModal() {
+      document.getElementById('tamModal').classList.add('show');
+    }
+    function closeModal() {
+      document.getElementById('tamModal').classList.remove('show');
+      document.getElementById('result').textContent = '';
+      document.getElementById('customers').value = '';
+      document.getElementById('revenue').value = '';
+    }
+    function calculateTAM() {
+      const customers = parseFloat(document.getElementById('customers').value);
+      const revenue = parseFloat(document.getElementById('revenue').value);
+      const resultDiv = document.getElementById('result');
+      if (!isNaN(customers) && !isNaN(revenue) && customers >= 0 && revenue >= 0) {
+        const tam = customers * revenue;
+        resultDiv.textContent = `Estimated TAM: $${tam.toLocaleString()}`;
+      } else {
+        resultDiv.textContent = 'Please enter valid numbers.';
+      }
+    }
+    window.onclick = function(event) {
+      const modal = document.getElementById('tamModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{% if media_file and file_exists %}
+  <img src="{{ media_file.url }}" alt="{{ alt_text }}" class="{{ css_class }}" 
+       onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'d-flex align-items-center justify-content-center h-100 bg-light text-muted\'><span>{{ fallback_text }}</span></div>';">
+{% else %}
+  <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
+    <span>{{ fallback_text }}</span>
+  </div>
+{% endif %}

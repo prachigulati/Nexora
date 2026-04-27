@@ -1,0 +1,297 @@
+<!-- Footer Component -->
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+  }
+
+  /* Footer Styles */
+  .nexora-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 60px 0 30px 0;
+    margin-top: auto;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .footer-brand i {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-right: 10px;
+  }
+
+  .footer-brand h5 {
+    color: #1f2937;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .footer-description {
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    max-width: 300px;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 40px;
+  }
+
+  .footer-social a {
+    color: #6b7280;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+
+  .footer-social a:hover {
+    color: var(--primary);
+  }
+
+  .footer-section h6 {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: 12px;
+  }
+
+  .footer-links a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--primary);
+  }
+
+  .newsletter-section h6 {
+    color: #1f2937;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .newsletter-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .newsletter-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  }
+
+  .newsletter-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .newsletter-btn:hover {
+    background: var(--primary-dark);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 25px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .footer-copyright {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .footer-powered {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+
+  .footer-powered .ethereum-icon {
+    color: #f59e0b;
+    font-size: 1rem;
+  }
+
+  .footer-powered a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-powered a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .nexora-footer {
+      padding: 40px 0 20px 0;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .newsletter-form {
+      flex-direction: column;
+    }
+
+    .footer-social {
+      justify-content: center;
+    }
+  }
+</style>
+
+<!-- Footer -->
+<footer class="nexora-footer">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Brand Section -->
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">
+          <i class="bi bi-hexagon-fill"></i>
+          <h5>Nexora</h5>
+        </div>
+        <p class="footer-description">
+          Empowering early-stage founders with AI mentorship, blockchain
+          trust, and crypto microfunding. Building the future of
+          decentralized startup ecosystem.
+        </p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"
+            ><i class="bi bi-linkedin"></i
+          ></a>
+          <a href="#" aria-label="GitHub"><i class="bi bi-github"></i></a>
+          <a href="#" aria-label="Discord"><i class="bi bi-discord"></i></a>
+          <a href="#" aria-label="Telegram"
+            ><i class="bi bi-telegram"></i
+          ></a>
+        </div>
+      </div>
+
+      <!-- Platform Links -->
+      <div class="col-lg-2 col-md-6">
+        <h6>Platform</h6>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'features' %}">Features</a></li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Community Links -->
+      <div class="col-lg-2 col-md-6">
+        <h6>Community</h6>
+        <ul class="footer-links">
+          <li><a href="{% url 'contact' %}">Support</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Community</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Links -->
+      <div class="col-lg-2 col-md-6">
+        <h6>Legal</h6>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Disclaimer</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="col-lg-2 col-md-6">
+        <h6>Stay Updated</h6>
+        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+          <input
+            type="email"
+            class="newsletter-input"
+            placeholder="Your email"
+            required
+          />
+          <button type="submit" class="newsletter-btn">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p class="footer-copyright">
+        © 2025 Nexora. All rights reserved. Built with ❤️ for the startup
+        community.
+      </p>
+      <div class="footer-powered">
+        <span>Powered by</span>
+        <i class="bi bi-ethereum ethereum-icon"></i>
+        <a href="#">Ethereum</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleNewsletter(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('input[type="email"]').value;
+    
+    // Here you would typically send the email to your backend
+    console.log('Newsletter signup:', email);
+    
+    // Show success message
+    alert('Thank you for subscribing to our newsletter!');
+    
+    // Reset form
+    event.target.reset();
+  }
+</script>

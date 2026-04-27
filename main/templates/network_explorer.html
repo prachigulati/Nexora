@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Network Explorer - Nexora</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-dark: #5b21b6;
+        --primary-light: #a855f7;
+        --bg-light: #f8f9fa;
+        --text-dark: #1f1f1f;
+        --text-muted: #6c757d;
+        --border-color: #e9ecef;
+      }
+
+      body {
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      .navbar {
+        background: white !important;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      }
+
+      .navbar-brand {
+        color: var(--primary) !important;
+        font-weight: 700;
+      }
+
+      .search-section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .user-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+      }
+
+      .user-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      .user-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0 auto 1rem;
+      }
+
+      .role-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 500;
+      }
+
+      .role-entrepreneur {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .role-investor {
+        background-color: #10b981;
+        color: white;
+      }
+
+      .role-member {
+        background-color: var(--text-muted);
+        color: white;
+      }
+
+      .role-both {
+        background: linear-gradient(45deg, var(--primary), #10b981);
+        color: white;
+      }
+
+      .tag {
+        background-color: var(--bg-light);
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+        margin: 0.1rem;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+      }
+
+      .btn-outline-primary {
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+      }
+
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+      }
+
+      .stats-text {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .connect-btn {
+        width: 100%;
+        margin-top: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+          <i class="bi bi-hexagon-fill me-2 fs-4"></i>
+          Network Explorer
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a href="{% url 'analytics_dashboard' %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-graph-up me-1"></i>
+            Analytics
+          </a>
+          <a href="{% url 'home' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-house me-1"></i>
+            Home
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <!-- Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h1 class="display-6 fw-bold text-center mb-2">Discover Your Network</h1>
+          <p class="text-muted text-center">Connect with entrepreneurs and investors in the Nexora ecosystem</p>
+        </div>
+      </div>
+
+      <!-- Search and Filters -->
+      <div class="search-section">
+        <form method="GET" class="row g-3">
+          <div class="col-md-4">
+            <label for="search" class="form-label">Search</label>
+            <input
+              type="text"
+              class="form-control"
+              id="search"
+              name="search"
+              placeholder="Name, company, location..."
+              value="{{ search_query }}"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role">
+              <option value="">All Roles</option>
+              <option value="entrepreneur" {% if role_filter == 'entrepreneur' %}selected{% endif %}>Entrepreneur</option>
+              <option value="investor" {% if role_filter == 'investor' %}selected{% endif %}>Investor</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="location" class="form-label">Location</label>
+            <select class="form-select" id="location" name="location">
+              <option value="">All Locations</option>
+              {% for location in all_locations %}
+              <option value="{{ location }}" {% if location_filter == location %}selected{% endif %}>{{ location }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="industry" class="form-label">Industry</label>
+            <select class="form-select" id="industry" name="industry">
+              <option value="">All Industries</option>
+              {% for industry in all_industries %}
+              <option value="{{ industry }}" {% if industry_filter == industry %}selected{% endif %}>{{ industry }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+        
+        <div class="mt-3">
+          <small class="text-muted">
+            <i class="bi bi-people me-1"></i>
+            Showing {{ total_users }} users
+          </small>
+        </div>
+      </div>
+
+      <!-- Users Grid -->
+      <div class="row g-4">
+        {% for user_data in users %}
+        <div class="col-lg-4 col-md-6">
+          <div class="card user-card">
+            <div class="card-body d-flex flex-column text-center p-4">
+              <!-- Avatar -->
+              <div class="user-avatar">
+                {% load media_tags %}
+                {% user_avatar user_data.user 80 "rounded-circle" %}
+              </div>
+
+              <!-- User Info -->
+              <h5 class="card-title mb-2">
+                {{ user_data.user.get_full_name|default:user_data.user.username }}
+              </h5>
+              
+              <!-- Role Badge -->
+              <div class="mb-3">
+                {% if user_data.primary_role == 'Entrepreneur & Investor' %}
+                  <span class="role-badge role-both">{{ user_data.primary_role }}</span>
+                {% elif user_data.primary_role == 'Entrepreneur' %}
+                  <span class="role-badge role-entrepreneur">{{ user_data.primary_role }}</span>
+                {% elif user_data.primary_role == 'Investor' %}
+                  <span class="role-badge role-investor">{{ user_data.primary_role }}</span>
+                {% else %}
+                  <span class="role-badge role-member">{{ user_data.primary_role }}</span>
+                {% endif %}
+              </div>
+
+              <!-- Company & Location -->
+              {% if user_data.profile.company or user_data.profile.job_title %}
+              <p class="text-muted small mb-2">
+                {% if user_data.profile.job_title %}{{ user_data.profile.job_title }}{% endif %}
+                {% if user_data.profile.company and user_data.profile.job_title %} at {% endif %}
+                {% if user_data.profile.company %}{{ user_data.profile.company }}{% endif %}
+              </p>
+              {% endif %}
+
+              {% if user_data.profile.location %}
+              <p class="text-muted small mb-3">
+                <i class="bi bi-geo-alt me-1"></i>
+                {{ user_data.profile.location }}
+              </p>
+              {% endif %}
+
+              <!-- Tags -->
+              {% if user_data.tags %}
+              <div class="mb-3">
+                {% for tag in user_data.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <!-- Stats -->
+              <div class="row text-center mb-3">
+                <div class="col-6">
+                  <div class="stats-text">
+                    <strong>{{ user_data.projects_count }}</strong><br>
+                    Project{{ user_data.projects_count|pluralize }}
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="stats-text">
+                    <strong>{{ user_data.applications_count }}</strong><br>
+                    Application{{ user_data.applications_count|pluralize }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Connect Button -->
+              <button class="btn btn-outline-primary btn-sm connect-btn" onclick="connectUser('{{ user_data.user.username }}')">
+                <i class="bi bi-person-plus me-1"></i>
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+          <div class="text-center py-5">
+            <i class="bi bi-people fs-1 text-muted mb-3"></i>
+            <h4 class="text-muted">No users found</h4>
+            <p class="text-muted">Try adjusting your search filters</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function connectUser(username) {
+        // Placeholder for connect functionality
+        alert(`Connect feature coming soon! You tried to connect with ${username}`);
+      }
+
+      // Auto-submit form on filter change
+      document.querySelectorAll('select').forEach(select => {
+        select.addEventListener('change', function() {
+          this.form.submit();
+        });
+      });
+    </script>
+  </body>
+</html>

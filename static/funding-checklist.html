@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funding Checklist</title>
+  <link rel="stylesheet" href="funding-checklist.css">
+</head>
+<body>
+  <div class="container">
+    <div class="checklist-card">
+      <div class="header">
+        <h1>Funding Checklist</h1>
+        <p>Track your progress toward securing funding</p>
+      </div>
+      
+      <div class="content">
+        <div class="progress-container">
+          <div class="progress-info">
+            <span id="progress-text">Progress: 0% Complete</span>
+            <button id="reset-button">Reset All</button>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-value"></div>
+          </div>
+        </div>
+        
+        <div id="checklist-container"></div>
+        
+        <div class="footer">
+          <button id="back-button">Back to Home</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="toast" class="toast">
+    <div class="toast-content">
+      <h3 id="toast-title"></h3>
+      <p id="toast-description"></p>
+    </div>
+  </div>
+  
+  <script src="funding-checklist.js"></script>
+</body>
+</html>

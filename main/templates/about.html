@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About - Nexora</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-light: #a78bfa;
+        --primary-dark: #6d28d9;
+        --background-light: #ffffff;
+        --background-gray: #f4f4ff;
+        --text-dark: #1f1f1f;
+        --text-muted: #6c757d;
+        --border-light: #e9ecef;
+      }
+
+      body {
+        background-color: var(--background-gray);
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      /* Enhanced Navbar Styles */
+      .navbar {
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .navbar-brand:hover {
+        transform: scale(1.05);
+        transition: transform 0.2s ease;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: all 0.3s ease;
+        color: #6c757d !important;
+      }
+
+      .nav-link:hover {
+        color: var(--primary) !important;
+        transform: translateY(-2px);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background-color: var(--primary);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after {
+        width: 80%;
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      }
+
+      /* Hero Section */
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        padding: 100px 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="1" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Cards */
+      .feature-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-light);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(124, 58, 237, 0.15);
+      }
+
+      .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .stats-section {
+        background: var(--primary);
+        color: white;
+        padding: 80px 0;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .timeline {
+        position: relative;
+        padding: 2rem 0;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--primary);
+        transform: translateX(-50%);
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 3rem;
+        width: 50%;
+      }
+
+      .timeline-item:nth-child(odd) {
+        left: 0;
+        padding-right: 3rem;
+        text-align: right;
+      }
+
+      .timeline-item:nth-child(even) {
+        left: 50%;
+        padding-left: 3rem;
+      }
+
+      .timeline-dot {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: var(--primary);
+        border-radius: 50%;
+        top: 0;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-dot {
+        right: -10px;
+      }
+
+      .timeline-item:nth-child(even) .timeline-dot {
+        left: -10px;
+      }
+
+      /* Enhanced Footer Styles */
+      footer {
+        background: #ffffff !important;
+        color: #1f1f1f;
+        border-top: 1px solid #e9ecef;
+      }
+
+      footer .text-muted {
+        color: #6c757d !important;
+      }
+
+      footer .footer-text {
+        color: #1f1f1f !important;
+      }
+
+      footer .footer-link {
+        color: #6c757d !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      footer .footer-link:hover {
+        color: var(--primary) !important;
+        transform: translateX(5px);
+      }
+
+      .hover-purple {
+        transition: all 0.3s ease;
+      }
+
+      .hover-purple:hover {
+        color: var(--primary) !important;
+        transform: translateX(5px);
+      }
+
+      footer .input-group input {
+        background-color: #ffffff !important;
+        border: 1px solid #e9ecef !important;
+        color: #1f1f1f !important;
+      }
+
+      footer .input-group input::placeholder {
+        color: #6c757d !important;
+      }
+
+      footer .input-group input:focus {
+        background-color: #ffffff !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25) !important;
+        color: #1f1f1f !important;
+      }
+
+      footer .btn:hover {
+        background-color: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+        transform: scale(1.05);
+      }
+
+      footer .fs-5:hover {
+        transform: translateY(-3px) scale(1.1);
+        color: var(--primary) !important;
+      }
+
+      footer h6 {
+        color: #ffffff !important;
+        font-weight: 700;
+      }
+
+      footer .border-top {
+        border-color: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      /* Mobile navbar improvements */
+      @media (max-width: 991.98px) {
+        .navbar-nav {
+          text-align: center;
+          padding: 1rem 0;
+        }
+
+        .navbar-nav .nav-link {
+          padding: 0.75rem 1rem;
+          border-radius: 8px;
+          margin: 0.25rem 0;
+        }
+
+        .navbar-nav .nav-link:hover {
+          background-color: rgba(124, 58, 237, 0.1);
+        }
+
+        .timeline::before {
+          left: 20px;
+        }
+
+        .timeline-item {
+          width: 100%;
+          left: 0 !important;
+          padding-left: 3rem !important;
+          padding-right: 0 !important;
+          text-align: left !important;
+        }
+
+        .timeline-dot {
+          left: 10px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+<nav
+  class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top"
+>
+  <div class="container-fluid px-4">
+    <!-- Brand -->
+    <a
+      class="navbar-brand fw-bold fs-3"
+      href="{% url 'home' %}"
+      style="color: #7c3aed"
+    >
+      <i class="bi bi-hexagon-fill me-2"></i>Nexora
+    </a>
+    <!-- Mobile Toggle Button -->
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Center Navigation Links -->
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'home' %}">
+            <i class="bi bi-house-door me-1"></i>Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'about' %}">
+            <i class="bi bi-info-circle me-1"></i>About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'features' %}">
+            <i class="bi bi-star me-1"></i>Features
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'contact' %}">
+            <i class="bi bi-envelope me-1"></i>Contact
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'ai_mentorship' %}">
+            <i class="bi bi-robot me-1"></i>AI Mentorship
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3 position-relative" href="/messaging">
+            <i class="bi bi-chat-dots me-1"></i>Messages
+            {% if unread_direct_messages_count > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+              {{ unread_direct_messages_count }}
+            </span>
+            {% endif %}
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      <!-- Right Side Actions -->
+      <div class="d-flex align-items-center gap-3">
+        {% if user.is_authenticated %}
+        <!-- Notifications -->
+        <a
+          href="{% url 'notifications' %}"
+          class="btn btn-outline-primary position-relative"
+          id="notificationBell"
+        >
+          <i class="bi bi-bell"></i>
+          {% if unread_notifications_count > 0 %}
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            id="notificationBadge"
+          >
+            {{ unread_notifications_count }}
+          </span>
+          {% endif %}
+        </a>
+        <!-- User Dropdown -->
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-person-circle me-2"></i><span>{{ user.get_full_name|default:user.username }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="bi bi-person me-2"></i>Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'settings' %}">
+                <i class="bi bi-gear me-2"></i>Settings
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <form action="{% url 'logout' %}" method="post" class="d-inline w-100">
+                {% csrf_token %}
+                <button class="dropdown-item text-danger" type="submit">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+        {% else %}
+        <!-- Login/Register buttons for non-authenticated users -->
+        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Login
+        </a>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">
+          <i class="bi bi-person-plus me-1"></i>Register
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-content">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-4">
+              Building the Future of Startup Funding
+            </h1>
+            <p class="lead mb-4">
+              Nexora is revolutionizing how early-stage startups connect with
+              investors, mentors, and opportunities through the power of
+              blockchain technology and artificial intelligence.
+            </p>
+            <div class="d-flex gap-3">
+              <a href="{% url 'features' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-star me-2"></i>Explore Features
+              </a>
+              <a
+                href="{% url 'contact' %}"
+                class="btn btn-outline-light btn-lg"
+              >
+                <i class="bi bi-envelope me-2"></i>Get in Touch
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-6 text-center">
+            <div class="position-relative">
+              <i
+                class="bi bi-hexagon-fill"
+                style="font-size: 15rem; opacity: 0.2"
+              ></i>
+              <div class="position-absolute top-50 start-50 translate-middle">
+                <i class="bi bi-rocket-takeoff" style="font-size: 6rem"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="py-5">
+      <div class="container">
+        <div class="row g-5">
+          <div class="col-lg-6">
+            <div class="feature-card h-100">
+              <div class="icon-wrapper">
+                <i class="bi bi-bullseye text-white fs-1"></i>
+              </div>
+              <h3 class="fw-bold mb-3" style="color: var(--primary)">
+                Our Mission
+              </h3>
+              <p class="text-muted">
+                To democratize startup funding by creating a trustless,
+                transparent, and accessible platform where entrepreneurs can
+                connect with investors, receive AI-powered mentorship, and
+                secure funding through decentralized mechanisms.
+              </p>
+              <p class="text-muted">
+                We believe every great idea deserves a chance to flourish,
+                regardless of geographical boundaries or traditional
+                gatekeepers.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card h-100">
+              <div class="icon-wrapper">
+                <i class="bi bi-eye text-white fs-1"></i>
+              </div>
+              <h3 class="fw-bold mb-3" style="color: var(--primary)">
+                Our Vision
+              </h3>
+              <p class="text-muted">
+                To become the world's leading decentralized startup ecosystem,
+                where innovation thrives through transparent collaboration,
+                AI-enhanced decision making, and blockchain-secured
+                transactions.
+              </p>
+              <p class="text-muted">
+                We envision a future where the next unicorn can emerge from
+                anywhere, supported by a global community of investors and
+                mentors.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">250+</div>
+              <p class="mb-0">Startups Funded</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">1M+</div>
+              <p class="mb-0">Total Funding Raised</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">100+</div>
+              <p class="mb-0">Active Investors</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">100%</div>
+              <p class="mb-0">Success Rate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="py-5">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="display-5 fw-bold" style="color: var(--primary)">
+            Our Story
+          </h2>
+          <p class="lead text-muted">
+            From a hackathon idea to a revolutionary platform
+          </p>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-lg-8 mx-auto">
+            <div class="bg-white p-5 rounded-3 shadow-sm">
+              <h4 class="fw-bold mb-4" style="color: var(--primary)">
+                <i class="bi bi-lightbulb me-2"></i>The Beginning
+              </h4>
+              <p class="text-muted mb-4">
+                It all started in the bustling corridors of
+                <strong>Chitkara University</strong>, where four passionate
+                computer science students came together with a shared vision.
+                During a late-night coding session, we realized that brilliant
+                startup ideas were dying not because they lacked potential, but
+                because they couldn't access the right funding and mentorship.
+              </p>
+              <p class="text-muted mb-4">
+                As students ourselves, we witnessed countless innovative
+                projects from our peers that never saw the light of day.
+                Traditional funding was too complex, too slow, and too
+                exclusive. We knew there had to be a better way.
+              </p>
+              <p class="text-muted">
+                <em
+                  >"What if we could democratize startup funding using
+                  blockchain technology and AI mentorship?"</em
+                >
+                - This question sparked the birth of Nexora.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="bg-white p-4 rounded-3 shadow-sm">
+              <h5 class="fw-bold" style="color: var(--primary)">
+                <i class="bi bi-trophy me-2"></i>2025 - The Hackathon
+              </h5>
+              <p class="text-muted mb-0">
+                Four students from Chitkara University participated in a
+                blockchain hackathon with a revolutionary idea: combining AI
+                mentorship with decentralized funding. What started as a 48-hour
+                coding marathon became the foundation of Nexora.
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="bg-white p-4 rounded-3 shadow-sm">
+              <h5 class="fw-bold" style="color: var(--primary)">
+                <i class="bi bi-code-slash me-2"></i>Development Phase
+              </h5>
+              <p class="text-muted mb-0">
+                Fueled by the positive response from the hackathon, our team
+                worked tirelessly to build a comprehensive platform. We
+                integrated MetaMask for seamless crypto transactions,
+                implemented AI-powered mentorship using advanced language
+                models, and created an intuitive interface for both
+                entrepreneurs and investors.
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="bg-white p-4 rounded-3 shadow-sm">
+              <h5 class="fw-bold" style="color: var(--primary)">
+                <i class="bi bi-rocket me-2"></i>Platform Launch
+              </h5>
+              <p class="text-muted mb-0">
+                After months of development, testing, and refinement, Nexora was
+                born. Our platform now features project showcasing, crypto-based
+                funding, AI mentorship, real-time analytics, and a thriving
+                community of entrepreneurs and investors.
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="bg-white p-4 rounded-3 shadow-sm">
+              <h5 class="fw-bold" style="color: var(--primary)">
+                <i class="bi bi-globe me-2"></i>The Future
+              </h5>
+              <p class="text-muted mb-0">
+                Today, Nexora stands as a testament to what passionate students
+                can achieve. We're not just building a platform; we're creating
+                an ecosystem where the next generation of entrepreneurs can
+                thrive, regardless of their background or location.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-10 mx-auto">
+            <div
+              class="bg-gradient p-4 rounded-3 text-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <h4 class="text-black fw-bold mb-3">
+                <i class="bi bi-heart me-2"></i>Built by Students, For
+                Entrepreneurs
+              </h4>
+              <p class="text-black mb-0">
+                From Chitkara University to the world proving that great ideas
+                can come from anywhere, and with the right tools and
+                determination, they can change everything.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 text-center">
+            <div class="w-100">
+              <div class="d-flex justify-content-center mb-3">
+                <div class="bg-primary rounded-circle p-3">
+                  <i class="bi bi-person-fill text-white fs-4"></i>
+                </div>
+              </div>
+              <h4 class="modal-title">Welcome Back</h4>
+              <p class="text-muted mb-0">Sign in to your Nexora account</p>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'login' %}">
+              {% csrf_token %}
+              <div class="mb-4">
+                <label class="form-label">
+                  <i class="bi bi-person me-2"></i>Username
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  class="form-control"
+                  placeholder="Enter your username"
+                  required
+                />
+              </div>
+              <div class="mb-4 position-relative">
+                <label class="form-label">
+                  <i class="bi bi-lock me-2"></i>Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="LoginPasswordInput"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="rememberMe"
+                  />
+                  <label class="form-check-label" for="rememberMe">
+                    Remember me
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 mb-3">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+              </button>
+            </form>
+            <div class="text-center">
+              <p class="mb-0">
+                Don't have an account?
+                <a
+                  href="#"
+                  class="modal-link"
+                  data-bs-toggle="modal"
+                  data-bs-target="#registerModal"
+                  data-bs-dismiss="modal"
+                >
+                  Create one here
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 text-center">
+            <div class="w-100">
+              <div class="d-flex justify-content-center mb-3">
+                <div class="bg-success rounded-circle p-3">
+                  <i class="bi bi-person-plus-fill text-white fs-4"></i>
+                </div>
+              </div>
+              <h4 class="modal-title">Join Nexora</h4>
+              <p class="text-muted mb-0">
+                Create your account and start your journey
+              </p>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'register' %}">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">
+                    <i class="bi bi-person me-2"></i>First Name
+                  </label>
+                  <input
+                    type="text"
+                    name="first_name"
+                    class="form-control"
+                    placeholder="Enter first name"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">
+                    <i class="bi bi-person me-2"></i>Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="last_name"
+                    class="form-control"
+                    placeholder="Enter last name"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-at me-2"></i>Username
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  class="form-control"
+                  placeholder="Choose a username"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-envelope me-2"></i>Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-4 position-relative">
+                <label class="form-label">
+                  <i class="bi bi-lock me-2"></i>Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="RegisterPasswordInput"
+                  class="form-control"
+                  placeholder="Create a strong password"
+                  required
+                />
+                <div class="form-text">
+                  <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Password should be at least 8 characters long
+                  </small>
+                </div>
+              </div>
+              <div class="mb-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="agreeTerms"
+                    required
+                  />
+                  <label class="form-check-label" for="agreeTerms">
+                    I agree to the
+                    <a href="#" class="modal-link">Terms of Service</a> and
+                    <a href="#" class="modal-link">Privacy Policy</a>
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success w-100 mb-3">
+                <i class="bi bi-person-plus me-2"></i>Create Account
+              </button>
+            </form>
+            <div class="text-center">
+              <p class="mb-0">
+                Already have an account?
+                <a
+                  href="#"
+                  class="modal-link"
+                  data-bs-toggle="modal"
+                  data-bs-target="#loginModal"
+                  data-bs-dismiss="modal"
+                >
+                  Sign in here
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+  </body>
+</html>

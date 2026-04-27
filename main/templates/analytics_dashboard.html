@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics Dashboard - Nexora</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-dark: #5b21b6;
+        --primary-light: #a855f7;
+        --bg-light: #f8f9fa;
+        --text-dark: #1f1f1f;
+        --text-muted: #6c757d;
+        --border-color: #e9ecef;
+      }
+
+      body {
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      .navbar {
+        background: white !important;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      }
+
+      .navbar-brand {
+        color: var(--primary) !important;
+        font-weight: 700;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      }
+
+      .metric-card {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+      }
+
+      .metric-card .card-body {
+        padding: 2rem;
+      }
+
+      .metric-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .metric-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .chart-container {
+        position: relative;
+        height: 300px;
+        margin: 1rem 0;
+      }
+
+      .section-title {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+      }
+
+      .activity-item {
+        padding: 1rem;
+        border-left: 3px solid var(--primary);
+        background: white;
+        margin-bottom: 0.5rem;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .activity-time {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center"
+          href="{% url 'home' %}"
+        >
+          <i class="bi bi-hexagon-fill me-2 fs-4"></i>
+          Nexora Analytics
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a
+            href="{% url 'network_explorer' %}"
+            class="btn btn-outline-primary btn-sm"
+          >
+            <i class="bi bi-people me-1"></i>
+            Network
+          </a>
+          <a href="{% url 'home' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-house me-1"></i>
+            Home
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <!-- Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h1 class="display-6 fw-bold text-center mb-2">Platform Analytics</h1>
+          <p class="text-muted text-center">
+            Real-time insights into your startup ecosystem
+          </p>
+        </div>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="row g-4 mb-5">
+        <div class="col-md-3">
+          <div class="card metric-card">
+            <div class="card-body text-center">
+              <div class="metric-number">{{ total_users }}</div>
+              <div class="metric-label">Total Users</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card metric-card">
+            <div class="card-body text-center">
+              <div class="metric-number">{{ total_projects }}</div>
+              <div class="metric-label">Projects Created</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card metric-card">
+            <div class="card-body text-center">
+              <div class="metric-number">{{ total_applications }}</div>
+              <div class="metric-label">Applications</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card metric-card">
+            <div class="card-body text-center">
+              <div class="metric-number">{{ total_funding }}</div>
+              <div class="metric-label">ETH Funded</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="row g-4 mb-5">
+        <!-- User Growth Chart -->
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="section-title">
+                <i class="bi bi-graph-up me-2"></i>
+                Daily User Signups (Last 30 Days)
+              </h5>
+              <div class="chart-container">
+                <canvas id="userGrowthChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Roles Pie Chart -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="section-title">
+                <i class="bi bi-pie-chart me-2"></i>
+                User Roles
+              </h5>
+              <div class="chart-container">
+                <canvas id="userRolesChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Analysis -->
+      <div class="row g-4 mb-5">
+        <!-- Projects by Category -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="section-title">
+                <i class="bi bi-bar-chart me-2"></i>
+                Projects by Category
+              </h5>
+              <div class="chart-container">
+                <canvas id="projectsCategoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projects by Stage -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="section-title">
+                <i class="bi bi-bar-chart me-2"></i>
+                Projects by Stage
+              </h5>
+              <div class="chart-container">
+                <canvas id="projectsStageChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="section-title">
+                <i class="bi bi-clock me-2"></i>
+                Recent Projects
+              </h5>
+              {% for project in recent_projects %}
+              <div class="activity-item">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h6 class="mb-1">{{ project.name }}</h6>
+                    <p class="mb-1 text-muted small">
+                      {{ project.description|truncatechars:80 }}
+                    </p>
+                    <small class="text-muted">
+                      by {{ project.user.get_full_name|default:project.user.username }}
+                    </small>
+                  </div>
+                  <span class="badge bg-primary">{{ project.category }}</span>
+                </div>
+                <div class="activity-time mt-2">
+                  {{ project.created_at|timesince }} ago
+                </div>
+              </div>
+              {% empty %}
+              <p class="text-muted">No recent projects</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="section-title">
+                <i class="bi bi-person-check me-2"></i>
+                Recent Applications
+              </h5>
+              {% for application in recent_applications %}
+              <div class="activity-item">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h6 class="mb-1">{{ application.position.title }}</h6>
+                    <p class="mb-1 text-muted small">
+                      {{ application.position.project.name }}
+                    </p>
+                    <small class="text-muted"
+                      >by {{
+                      application.applicant.get_full_name|default:application.applicant.username
+                      }}</small
+                    >
+                  </div>
+                  <span
+                    class="badge bg-{% if application.status == 'approved' %}success{% elif application.status == 'rejected' %}danger{% else %}warning{% endif %}"
+                  >
+                    {{ application.status|title }}
+                  </span>
+                </div>
+                <div class="activity-time mt-2">
+                  {{ application.created_at|timesince }} ago
+                </div>
+              </div>
+              {% empty %}
+              <p class="text-muted">No recent applications</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Chart.js configuration
+      Chart.defaults.font.family = 'Inter, sans-serif';
+      Chart.defaults.color = '#6c757d';
+
+      const primaryColor = '#7c3aed';
+      const primaryDark = '#5b21b6';
+      const primaryLight = '#a855f7';
+
+      // Daily User Signups Chart
+      const dailySignupsData = {{ daily_signups|safe }};
+      const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+      new Chart(userGrowthCtx, {
+        type: 'line',
+        data: {
+          labels: dailySignupsData.map(item => item.day),
+          datasets: [{
+            label: 'Daily Signups',
+            data: dailySignupsData.map(item => item.count),
+            borderColor: primaryColor,
+            backgroundColor: primaryColor + '20',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+
+      // User Roles Pie Chart
+      const userRolesCtx = document.getElementById('userRolesChart').getContext('2d');
+      new Chart(userRolesCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Entrepreneurs', 'Investors', 'Others'],
+          datasets: [{
+            data: [{{ entrepreneurs }}, {{ investors }}, {{ others }}],
+            backgroundColor: [primaryColor, primaryDark, primaryLight],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Projects by Category Chart
+      const projectsCategoryData = {{ projects_by_category|safe }};
+      const projectsCategoryCtx = document.getElementById('projectsCategoryChart').getContext('2d');
+      new Chart(projectsCategoryCtx, {
+        type: 'bar',
+        data: {
+          labels: projectsCategoryData.map(item => item.category),
+          datasets: [{
+            label: 'Projects',
+            data: projectsCategoryData.map(item => item.count),
+            backgroundColor: primaryColor,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+
+      // Projects by Stage Chart
+      const projectsStageData = {{ projects_by_stage|safe }};
+      const projectsStageCtx = document.getElementById('projectsStageChart').getContext('2d');
+      new Chart(projectsStageCtx, {
+        type: 'bar',
+        data: {
+          labels: projectsStageData.map(item => item.stage),
+          datasets: [{
+            label: 'Projects',
+            data: projectsStageData.map(item => item.count),
+            backgroundColor: primaryDark,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,236 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f9f9fb, #f0f0f5);
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Card styling */
+.checklist-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: fade-in 0.5s ease-out;
+}
+
+.header {
+  background: linear-gradient(to right, #7e22ce, #a855f7);
+  padding: 1.5rem;
+  color: white;
+}
+
+.header h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+}
+
+.header p {
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+/* Progress bar */
+.progress-container {
+  margin-bottom: 2rem;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#progress-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.progress-bar {
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+#progress-value {
+  height: 100%;
+  background: linear-gradient(to right, #7e22ce, #a855f7);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* Checklist items */
+.checklist-item {
+  display: flex;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checklist-item:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.checklist-item.completed {
+  background-color: #f0f7ff;
+  border-color: #bfdbfe;
+}
+
+.circle-icon {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+  margin-top: 0.125rem;
+}
+
+.circle-icon svg {
+  height: 1.5rem;
+  width: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.checklist-item:hover .circle-icon svg {
+  transform: scale(1.1);
+}
+
+.item-text {
+  font-weight: 500;
+}
+
+.completed .item-text {
+  color: #6b7280;
+  text-decoration: line-through;
+}
+
+/* Buttons */
+button {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+}
+
+#reset-button {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+#reset-button:hover {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+}
+
+#back-button {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  margin-top: 1.5rem;
+}
+
+#back-button:hover {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transform: translateY(150%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 100;
+  max-width: 300px;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#toast-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+#toast-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .header {
+    padding: 1.25rem;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .content {
+    padding: 1.25rem;
+  }
+}

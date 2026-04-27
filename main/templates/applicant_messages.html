@@ -1,0 +1,1412 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Applications - Nexora</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-light: #a78bfa;
+        --primary-dark: #6d28d9;
+        --background-light: #ffffff;
+        --background-gray: #f4f4ff;
+        --text-dark: #1f1f1f;
+        --text-muted: #6c757d;
+        --border-light: #e9ecef;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+      }
+
+      body {
+        background-color: var(--background-gray);
+        font-family: "Segoe UI", sans-serif;
+        color: var(--text-dark);
+      }
+
+      .application-card {
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-light);
+        background: var(--background-light);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.08);
+      }
+
+      .application-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+        border-color: var(--primary);
+      }
+
+      .application-card:not(.cursor-pointer) {
+        opacity: 0.7;
+      }
+
+      .application-card:not(.cursor-pointer):hover {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.08);
+      }
+
+      /* Enhanced Button Styling */
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      }
+
+      .btn-success {
+        background-color: var(--success);
+        border-color: var(--success);
+        transition: all 0.3s ease;
+      }
+
+      .btn-success:hover {
+        background-color: #0d9488;
+        border-color: #0d9488;
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        background-color: var(--danger);
+        border-color: var(--danger);
+        transition: all 0.3s ease;
+      }
+
+      .btn-danger:hover {
+        background-color: #dc2626;
+        border-color: #dc2626;
+        transform: translateY(-1px);
+      }
+
+      /* Status Badge Styling */
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .bg-success {
+        background-color: var(--success) !important;
+      }
+
+      .bg-warning {
+        background-color: var(--warning) !important;
+      }
+
+      .bg-danger {
+        background-color: var(--danger) !important;
+      }
+
+      /* Card Header Styling */
+      .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 12px 12px 0 0 !important;
+      }
+
+      /* Form Control Focus */
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+      }
+
+      /* Text Colors */
+      .text-muted {
+        color: var(--text-muted) !important;
+      }
+
+      /* Empty State Styling */
+      .text-center {
+        color: var(--text-muted);
+      }
+
+      /* Search Input Styling */
+      .form-control {
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:hover {
+        border-color: var(--primary-light);
+      }
+
+      .application-card:not(.cursor-pointer):hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .status-pending {
+        background-color: #fbbf24;
+      }
+      .status-approved {
+        background-color: #10b981;
+      }
+      .status-rejected {
+        background-color: #ef4444;
+      }
+
+      .message-area {
+        height: 400px;
+        overflow-y: auto;
+        border: none;
+        border-radius: 0;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        position: relative;
+      }
+
+      .message-bubble {
+        margin-bottom: 1rem;
+        padding: 0.875rem 1.25rem;
+        border-radius: 20px;
+        max-width: 70%;
+        word-wrap: break-word;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        animation: messageSlideIn 0.4s ease-out;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+
+      @keyframes messageSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message-sent {
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 6px;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+      }
+
+      .message-received {
+        background: white;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        margin-right: auto;
+        border-bottom-left-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .message-time {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 0.5rem;
+        text-align: right;
+        font-weight: 400;
+      }
+
+      .message-received .message-time {
+        color: #6b7280;
+      }
+
+      .message-sent .message-time {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .message-received .message-time {
+        text-align: left;
+      }
+
+      .empty-messages {
+        text-align: center;
+        color: #9ca3af;
+        padding: 4rem 2rem;
+        font-style: italic;
+        background: white;
+        border-radius: 16px;
+        margin: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .empty-messages i {
+        font-size: 3rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+      }
+
+      .message-input-container {
+        border-top: 1px solid #e5e7eb;
+        padding: 1rem 1.25rem;
+        background: white;
+        border-radius: 0;
+      }
+
+      .message-input {
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 0.75rem 1rem;
+        resize: none;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: #f9fafb;
+        line-height: 1.4;
+      }
+
+      .message-input:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        outline: none;
+        background: white;
+      }
+
+      .message-input::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+      }
+
+      /* Auto-expanding textarea */
+      .auto-expand {
+        overflow-y: hidden;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+
+      /* Attachment Button */
+      .attachment-btn {
+        border: none !important;
+        border-radius: 50% !important;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .attachment-btn:hover {
+        background-color: #f3f4f6 !important;
+        transform: scale(1.1);
+      }
+
+      /* Attachment Preview */
+      .attachment-preview-container {
+        max-height: 120px;
+        overflow-y: auto;
+      }
+
+      .attachment-item {
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        max-width: 200px;
+      }
+
+      .attachment-item .remove-attachment {
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        cursor: pointer;
+      }
+
+      .attachment-item .remove-attachment:hover {
+        background: #dc2626;
+      }
+
+      .send-button {
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);
+      }
+
+      .send-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+        background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+      }
+
+      .send-button:active {
+        transform: translateY(0);
+      }
+
+      .hover-bg-light:hover {
+        background-color: #f8f9fa !important;
+      }
+
+      .application-item {
+        transition: background-color 0.2s ease;
+      }
+
+      .application-item:hover {
+        background-color: #f8f9fa;
+      }
+
+      .cursor-pointer {
+        cursor: pointer;
+      }
+
+      /* Search input styling */
+      .input-group-text {
+        background-color: white !important;
+        border-color: #dee2e6;
+      }
+
+      .form-control:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+      }
+
+      /* Application item selected state */
+      .application-item.selected {
+        background-color: #e8f2ff !important;
+        border-left: 3px solid #7c3aed;
+      }
+
+      /* Status badges */
+      .badge {
+        font-weight: 500;
+      }
+
+      /* Chat header styling */
+      .bg-light {
+        background-color: #f8f9fa !important;
+      }
+
+      /* Messages container */
+      #messagesContainer {
+        background-color: #fafafa;
+      }
+
+      /* Messages Scroll Container - Full Height Fix */
+      .messages-scroll-container {
+        flex-grow: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 0.5rem 0.75rem;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        min-height: 0; /* Important for flex-grow to work properly */
+      }
+
+      .messages-scroll-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Chat Body Full Height */
+      .chat-body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Chat Body Full Height */
+      .chat-body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .message-input-container {
+          padding: 0.75rem 1rem;
+        }
+
+        .attachment-btn {
+          width: 36px;
+          height: 36px;
+        }
+
+        .send-button {
+          width: 36px;
+          height: 36px;
+          padding: 0.5rem;
+        }
+
+        .message-bubble {
+          max-width: 85%;
+          font-size: 0.85rem;
+          padding: 0.6rem 0.8rem;
+        }
+
+        .message-time {
+          font-size: 0.65rem;
+        }
+      }
+
+      /* Hover effects for timestamps */
+      .message-bubble:hover .message-time {
+        opacity: 1;
+      }
+
+      /* Smooth scrolling */
+      .messages-scroll-container {
+        scroll-behavior: smooth;
+      }
+
+      /* Loading state for send button */
+      .send-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      /* Filter section styling */
+      .form-select:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+      }
+
+      /* Clear filters button */
+      .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+      }
+
+      /* Chat UI Improvements */
+      .chat-body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #f0f2f5;
+      }
+
+      .chat-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        z-index: 10;
+      }
+
+      /* Messages container */
+      #messagesContainer {
+        background-color: #efeae2;
+        background-image: none;
+        padding: 1.5rem;
+        overflow-y: auto;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        height: 100%;
+      }
+
+      /* Messages Scroll Container - Full Height Fix */
+      .messages-scroll-container {
+        flex-grow: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        scrollbar-width: thin;
+        -ms-overflow-style: none;
+        min-height: 0; /* Important for flex-grow to work properly */
+      }
+
+      .messages-scroll-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .messages-scroll-container::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      .message-bubble {
+        font-size: 0.92rem;
+        padding: 0.6rem 0.9rem;
+        max-width: 60%;
+        line-height: 1.4;
+        position: relative;
+        word-break: break-word;
+        border-radius: 0.8rem;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.25s ease-in-out;
+      }
+
+      .message-sent {
+        background-color: #d9fdd3;
+        align-self: flex-end;
+        border-bottom-right-radius: 0.2rem;
+      }
+
+      .message-received {
+        background-color: #ffffff;
+        align-self: flex-start;
+        border-bottom-left-radius: 0.2rem;
+      }
+
+      .message-time {
+        font-size: 0.68rem;
+        color: #999;
+        margin-top: 0.3rem;
+        text-align: right;
+      }
+
+      .empty-messages {
+        text-align: center;
+        color: #9ca3af;
+        padding: 3rem 2rem;
+        font-style: italic;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        margin: auto;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        max-width: 400px;
+      }
+
+      .message-input-container {
+        background-color: #f0f0f0;
+        border-top: 1px solid #ddd;
+        padding: 0.8rem 1rem;
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+      }
+
+      .message-input {
+        flex-grow: 1;
+        border-radius: 20px;
+        resize: none;
+        background-color: white;
+        padding: 0.6rem 1rem;
+        font-size: 0.92rem;
+        border: 1px solid #ccc;
+        max-height: 120px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .send-button {
+        width: 42px;
+        height: 42px;
+        background-color: #008069;
+        transition: 0.2s ease-in-out;
+      }
+
+      .send-button:hover {
+        background-color: #056c57;
+      }
+
+      .attachment-btn:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .attachment-btn {
+        background: none;
+        border: none;
+        color: #6b7280;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .attachment-btn:hover {
+        background: #f3f4f6;
+      }
+
+      /* Selected application styling */
+      .application-item.selected {
+        background-color: rgba(124, 58, 237, 0.1);
+        border-left: 3px solid #7c3aed;
+      }
+
+      /* Hide scrollbars but keep functionality */
+      .hide-scrollbar {
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+        scrollbar-width: none; /* Firefox */
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+      }
+
+      /* Ensure proper height constraints */
+      .chat-container {
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Smooth scrolling */
+      .smooth-scroll {
+        scroll-behavior: smooth;
+      }
+
+      /* Welcome screen styling */
+      #welcomeScreen {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: white !important;
+        z-index: 5 !important;
+      }
+
+      /* Chat interface styling */
+      #chatHeader, #chat-box, #chatInput {
+        position: relative;
+        z-index: 10;
+        background: white;
+      }
+
+      /* Message row styling */
+      .message-row {
+        display: flex;
+        width: 100%;
+        padding: 4px 8px;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+      }
+
+      .message-row.sent {
+        justify-content: flex-end;
+      }
+
+      .message-row.received {
+        justify-content: flex-start;
+      }
+
+      .message-bubble {
+        display: inline-block;
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal; /* ✅ KEY FIX */
+        box-sizing: border-box;
+      }
+
+      .message-bubble.sent {
+        background: linear-gradient(to right, #4a6cf7, #3b82f6);
+        color: white;
+        border-bottom-right-radius: 0;
+      }
+
+      .message-bubble.received {
+        background: #f1f1f1;
+        color: #000;
+        border-bottom-left-radius: 0;
+      }
+
+      .timestamp {
+        font-size: 10px;
+        margin-top: 4px;
+        text-align: right;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .message-bubble.received .timestamp {
+        color: #888;
+      }
+
+      /* New: Fix chat container overflow */
+      #chat-box {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      /* New: Ensure #chat-messages fills container */
+      #chat-messages {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .message-content {
+        margin-bottom: 6px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid chat-container">
+      <div class="row h-100">
+        <!-- Left Sidebar -->
+        <div
+          class="col-3 bg-light border-end p-0 d-flex flex-column"
+          style="height: 100vh; overflow: hidden"
+        >
+          <!-- Header -->
+          <div class="p-3 border-bottom bg-white">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-envelope me-2 text-primary fs-5"></i>
+              <span class="fw-bold">Your Applications</span>
+
+              <!-- Notifications Dropdown -->
+              <div class="dropdown ms-auto me-2">
+                <button
+                  class="btn btn-outline-primary btn-sm position-relative"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="bi bi-bell"></i>
+                  {% if unread_notifications_count > 0 %}
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="font-size: 0.6rem"
+                  >
+                    {{ unread_notifications_count }}
+                  </span>
+                  {% endif %}
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  style="width: 300px; max-height: 400px; overflow-y: auto"
+                >
+                  <li><h6 class="dropdown-header">Recent Notifications</h6></li>
+                  {% for notification in notifications %}
+                  <li>
+                    <div
+                      class="dropdown-item-text small {% if not notification.is_read %}bg-light{% endif %}"
+                      style="white-space: normal"
+                    >
+                      <div class="fw-semibold">{{ notification.title }}</div>
+                      <div class="text-muted" style="font-size: 0.8rem">
+                        {{ notification.message|truncatechars:80 }}
+                      </div>
+                      <div class="text-muted" style="font-size: 0.7rem">
+                        {{ notification.created_at|timesince }} ago
+                      </div>
+                    </div>
+                  </li>
+                  {% empty %}
+                  <li>
+                    <div class="dropdown-item-text text-muted small">
+                      No notifications yet
+                    </div>
+                  </li>
+                  {% endfor %} {% if notifications %}
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a
+                      class="dropdown-item small text-center"
+                      href="#"
+                      onclick="markAllAsRead()"
+                      >Mark all as read</a
+                    >
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+
+              <a href="{% url 'home' %}" class="text-decoration-none">
+                <i class="bi bi-house text-primary fs-5"></i>
+              </a>
+            </div>
+
+            <!-- Browse Projects Button -->
+            <button
+              class="btn btn-primary btn-sm w-100 mb-3"
+              onclick="window.location.href='{% url 'home' %}'"
+            >
+              <i class="bi bi-search me-1"></i>Browse Projects
+            </button>
+
+            <!-- Search Projects Filter -->
+            <div class="mb-3">
+              <label class="form-label small text-muted">Search Projects</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white border-end-0">
+                  <i class="bi bi-search text-muted"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control border-start-0 border-end-0"
+                  id="searchProjects"
+                  placeholder="Search projects you applied to..."
+                  onkeyup="searchProjects()"
+                  oninput="searchProjects()"
+                />
+                <button
+                  class="btn btn-outline-secondary border-start-0"
+                  type="button"
+                  onclick="clearSearch()"
+                  style="padding: 0.25rem 0.5rem;"
+                  title="Clear search"
+                >
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Applications List -->
+          <div
+            class="flex-grow-1 hide-scrollbar smooth-scroll"
+            style="overflow-y: auto"
+            id="applicationsList"
+          >
+            {% if applications %} {% for app in applications %}
+            <div
+              class="application-item p-3 border-bottom {% if app.status == 'approved' %}cursor-pointer{% endif %} hover-bg-light"
+              data-project-id="{{ app.position.project.id }}"
+              data-project-name="{{ app.position.project.name|lower }}"
+              data-position-title="{{ app.position.title|lower }}"
+              data-status="{{ app.status }}"
+              {% if app.status == 'approved' %}onclick="loadInlineChat('app_{{ app.id }}', '{{ app.position.project.user.username }}', 'you applied to: {{ app.position.project.name }}', '{% if app.position.project.user.userprofile.avatar %}{{ app.position.project.user.userprofile.avatar.url }}{% endif %}')" style="cursor: pointer;"{% else %}style="cursor: default; opacity: 0.7;"{% endif %}
+              <!--
+              Application
+              Header
+              --
+            >
+              <div class="d-flex align-items-start mb-2">
+                <div class="me-3">
+                  {% load media_tags %}
+                  {% user_avatar app.position.project.user 40 "rounded-circle" %}
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fw-semibold">
+                    {{ app.position.project.user.username }}
+                  </div>
+                  <div class="text-primary small fw-medium">
+                    Position: {{ app.position.title }}
+                  </div>
+                  <div class="text-muted small">
+                    Project: {{ app.position.project.name }}
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span
+                    class="badge {% if app.status == 'approved' %}bg-success {% elif app.status == 'rejected' %}bg-danger {% else %}bg-warning text-dark{% endif %}"
+                    style="font-size: 0.7rem"
+                  >
+                    {{ app.status|default:"pending"|title }}
+                  </span>
+                  <div class="small text-muted mt-1">
+                    {{ app.created_at|date:"M d" }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Application Summary -->
+              <div class="small text-muted mb-2">
+                <div>
+                  <strong>Applied to:</strong> {{ app.position.project.name }}
+                </div>
+                <div><strong>Position:</strong> {{ app.position.title }}</div>
+                <div>
+                  <strong>Status:</strong> {{ app.status|default:"pending"|title }}
+                </div>
+              </div>
+
+              <!-- Status Tags and Message -->
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-primary">APPLICATION</span>
+                {% if app.status == 'approved' %}
+                <span class="badge bg-success">APPROVED</span>
+                {% elif app.status == 'rejected' %}
+                <span class="badge bg-danger">REJECTED</span>
+                {% else %}
+                <span class="badge bg-warning">PENDING APPROVAL</span>
+                {% endif %}
+              </div>
+              <div class="small">
+                {% if app.status == 'approved' %}
+                <i class="bi bi-chat-dots me-1 text-success"></i>
+                <span class="text-success">Click to start messaging</span>
+                {% elif app.status == 'rejected' %}
+                <i class="bi bi-x-circle me-1 text-danger"></i>
+                <span class="text-danger">Application not selected</span>
+                {% else %}
+                <i class="bi bi-clock me-1 text-warning"></i>
+                <span class="text-warning">Pending approval - messaging disabled</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %} {% else %}
+            <div class="text-center p-4">
+              <i class="bi bi-inbox display-6 text-muted mb-3"></i>
+              <h6 class="text-muted">No applications found</h6>
+              <p class="small text-muted">
+                You haven't applied to any projects yet. Start
+                <span class="text-primary">exploring</span> available projects
+                and submit your first application.
+              </p>
+              <p class="small text-muted">
+                Applications you submit will appear here with their current
+                status.
+              </p>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="window.location.href='{% url 'home' %}'"
+              >
+                <i class="bi bi-search me-1"></i>Browse Projects
+              </button>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div
+          class="col-9 d-flex flex-column p-0 position-relative"
+          style="height: 100vh; overflow: hidden"
+        >
+          <!-- Welcome screen -->
+          <div
+            id="welcomeScreen"
+            class="position-absolute w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center px-4"
+            style="z-index: 5; background: white;"
+          >
+            <div
+              class="rounded-circle d-flex align-items-center justify-content-center mb-4"
+              style="
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+              "
+            >
+              <i class="bi bi-chat-dots-fill text-white fs-2"></i>
+            </div>
+            <h2 class="fw-bold text-dark mb-3">Welcome to Nexora</h2>
+            <p class="text-muted mb-2">Your professional messaging platform for</p>
+            <p class="text-muted">project collaboration</p>
+          </div>
+
+          <!-- Chat Header - Hidden by default -->
+          <div
+            class="border-bottom p-3 d-flex align-items-center justify-content-between flex-shrink-0"
+            id="chatHeader"
+            style="display: none !important; height: 70px; z-index: 10; background: white;"
+          >
+            <div class="d-flex align-items-center gap-3">
+              <div id="chatAvatar">
+                <div
+                  class="rounded-circle d-flex align-items-center justify-content-center text-white fw-semibold"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%);
+                  "
+                >
+                  U
+                </div>
+              </div>
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="fw-semibold text-dark mb-0" id="chatTitle">
+                    Username
+                  </h5>
+                  <span id="chatStatus" class="badge"></span>
+                </div>
+                <p class="text-muted small mb-0" id="chatSubtitle">Role</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Body - Hidden by default -->
+          <div
+            id="chat-box"
+            class="flex-grow-1 p-4 hide-scrollbar smooth-scroll"
+            style="
+              overflow-y: auto;
+              overflow-x: hidden;
+              max-height: calc(100vh - 140px);
+              display: none !important;
+              z-index: 10;
+              background: white;
+            "
+          >
+            <div id="chat-messages"></div>
+          </div>
+
+          <!-- Chat Input - Hidden by default -->
+          <div
+            id="chatInput"
+            class="border-top p-3 d-flex align-items-center gap-3 flex-shrink-0"
+            style="height: 70px; z-index: 10; display: none !important; background: white;"
+          >
+            <input
+              id="message-input"
+              type="text"
+              placeholder="Type a message..."
+              class="form-control rounded-pill border-1"
+              style="flex-grow: 1"
+            />
+            <button
+              onclick="sendMessage()"
+              class="btn btn-primary rounded-pill px-4"
+            >
+              <i class="bi bi-send"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+
+
+
+
+
+
+
+      // Function to search projects
+      function searchProjects() {
+        const searchInput = document.getElementById('searchProjects');
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const applicationItems = document.querySelectorAll('.application-item');
+
+        applicationItems.forEach(item => {
+          const projectName = item.getAttribute('data-project-name') || '';
+          const positionTitle = item.getAttribute('data-position-title') || '';
+
+          // Check if search term matches project name or position title
+          const matchesSearch = projectName.includes(searchTerm) ||
+                               positionTitle.includes(searchTerm);
+
+          if (matchesSearch || searchTerm === '') {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        // Show/hide "no applications" message if needed
+        const visibleItems = document.querySelectorAll('.application-item[style*="block"], .application-item:not([style*="none"])');
+        const noApplicationsMsg = document.querySelector('.text-center.text-muted');
+
+        if (visibleItems.length === 0 && searchTerm !== '') {
+          // Create or show "no results" message
+          let noResultsMsg = document.getElementById('noSearchResults');
+          if (!noResultsMsg) {
+            noResultsMsg = document.createElement('div');
+            noResultsMsg.id = 'noSearchResults';
+            noResultsMsg.className = 'text-center text-muted p-4';
+            noResultsMsg.innerHTML = '<i class="bi bi-search me-2"></i>No applications found matching your search.';
+            document.getElementById('applicationsList').appendChild(noResultsMsg);
+          }
+          noResultsMsg.style.display = 'block';
+        } else {
+          // Hide "no results" message
+          const noResultsMsg = document.getElementById('noSearchResults');
+          if (noResultsMsg) {
+            noResultsMsg.style.display = 'none';
+          }
+        }
+      }
+
+      // Function to clear search
+      function clearSearch() {
+        const searchInput = document.getElementById('searchProjects');
+        searchInput.value = '';
+        searchProjects(); // Trigger search to show all items
+        searchInput.focus(); // Keep focus on search input
+      }
+
+      // Global variables for current chat
+      let currentChatId = null;
+      let currentChatName = null;
+      let currentChatContext = null;
+      let messagePollingInterval = null;
+
+      // Function to load inline chat
+      function loadInlineChat(conversationId, userName, context, avatar) {
+        currentChatId = conversationId;
+        currentChatName = userName;
+        currentChatContext = context;
+
+        // Hide welcome screen
+        const welcomeScreen = document.getElementById("welcomeScreen");
+        welcomeScreen.style.display = "none";
+
+        // Show chat interface
+        const chatHeader = document.getElementById("chatHeader");
+        const chatBox = document.getElementById("chat-box");
+        const chatInput = document.getElementById("chatInput");
+
+        chatHeader.style.setProperty("display", "flex", "important");
+        chatBox.style.setProperty("display", "flex", "important");
+        chatInput.style.setProperty("display", "flex", "important");
+
+        // Update chat header
+        const chatTitle = document.getElementById("chatTitle");
+        const chatSubtitle = document.getElementById("chatSubtitle");
+        const chatAvatar = document.getElementById("chatAvatar");
+
+        if (chatTitle) chatTitle.textContent = userName;
+        if (chatSubtitle) chatSubtitle.textContent = context;
+        if (chatAvatar) {
+          if (avatar) {
+            chatAvatar.innerHTML = `<img src="${avatar}" alt="${userName}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">`;
+          } else {
+            const initial = userName.charAt(0).toUpperCase();
+            chatAvatar.innerHTML = `<div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 40px; height: 40px; background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);">${initial}</div>`;
+          }
+        }
+
+        // Load messages
+        loadChatMessages(conversationId);
+
+        // Start polling for new messages
+        startMessagePolling(conversationId);
+      }
+
+      // Function to show welcome screen
+      function showWelcomeScreen() {
+        const welcomeScreen = document.getElementById("welcomeScreen");
+        const chatHeader = document.getElementById("chatHeader");
+        const chatBox = document.getElementById("chat-box");
+        const chatInput = document.getElementById("chatInput");
+
+        // Show welcome screen
+        welcomeScreen.style.display = "flex";
+        welcomeScreen.style.visibility = "visible";
+        welcomeScreen.style.opacity = "1";
+        welcomeScreen.style.zIndex = "5";
+
+        // Hide chat interface
+        chatHeader.style.setProperty("display", "none", "important");
+        chatBox.style.setProperty("display", "none", "important");
+        chatInput.style.setProperty("display", "none", "important");
+
+        // Stop polling
+        if (messagePollingInterval) {
+          clearInterval(messagePollingInterval);
+          messagePollingInterval = null;
+        }
+
+        // Clear current chat
+        currentChatId = null;
+        currentChatName = null;
+        currentChatContext = null;
+      }
+
+      // Load chat messages
+      async function loadChatMessages(conversationId) {
+        try {
+          const response = await fetch(`/api/messages/${conversationId}/`, {
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken')
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            displayChatMessages(data.messages || []);
+          } else {
+            console.error('Failed to load messages');
+          }
+        } catch (error) {
+          console.error('Error loading messages:', error);
+        }
+      }
+
+      // Display chat messages
+      function displayChatMessages(messages) {
+        const container = document.getElementById('chat-messages');
+
+        if (!container) return;
+
+        if (messages.length === 0) {
+          container.innerHTML = `
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-chat-square-text fs-1 mb-3"></i>
+              <p>No messages yet. Start the conversation!</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = messages.map(message => {
+          // Handle both is_sender and isSent field names
+          const isSent = message.is_sender || message.isSent;
+
+          // Format timestamp properly
+          let formattedTime = '';
+          if (message.timestamp) {
+            const date = new Date(message.timestamp);
+            formattedTime = date.toLocaleString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            });
+          }
+
+          return `
+            <div class="message-row ${isSent ? 'sent' : 'received'}">
+              <div class="message-bubble ${isSent ? 'sent' : 'received'}">
+                <div class="message-content">${message.content}</div>
+                <div class="timestamp">${formattedTime}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Scroll to bottom
+        container.scrollTop = container.scrollHeight;
+      }
+
+      // Send message
+      async function sendMessage() {
+        const input = document.getElementById('message-input');
+        const content = input.value.trim();
+
+        console.log('sendMessage called:', { content, currentChatId });
+
+        if (!content || !currentChatId) {
+          console.log('Missing content or chatId:', { content, currentChatId });
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/send-message/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+              conversationId: currentChatId,
+              content: content
+            })
+          });
+
+          console.log('Response status:', response.status);
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log('Message sent successfully:', result);
+            input.value = '';
+            // Reload messages to show the new one
+            loadChatMessages(currentChatId);
+          } else {
+            const errorText = await response.text();
+            console.error('Failed to send message:', response.status, errorText);
+          }
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
+      }
+
+      // Start message polling
+      function startMessagePolling(conversationId) {
+        if (messagePollingInterval) {
+          clearInterval(messagePollingInterval);
+        }
+
+        messagePollingInterval = setInterval(() => {
+          if (currentChatId === conversationId) {
+            loadChatMessages(conversationId);
+          }
+        }, 30000); // Poll every 30 seconds to reduce server load
+      }
+
+      // Get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Add Enter key support for message input
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize welcome screen
+        showWelcomeScreen();
+
+        const messageInput = document.getElementById("message-input");
+        if (messageInput) {
+          messageInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              sendMessage();
+            }
+          });
+        }
+      });
+
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', function() {
+        if (messagePollingInterval) {
+          clearInterval(messagePollingInterval);
+        }
+      });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+  </body>
+</html>

@@ -1,0 +1,594 @@
+<!-- Messaging Navigation Component -->
+<div class="messaging-navigation-component">
+    <style>
+        .messaging-nav {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .messaging-nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-home-btn {
+            padding: 8px 12px;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-right: 12px;
+        }
+
+        .nav-home-btn:hover {
+            background: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+            transform: translateY(-1px);
+        }
+
+        .messaging-nav-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f1f1f;
+            margin: 0;
+        }
+
+        .messaging-nav-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .nav-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-stat.unread {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .messaging-nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 20px;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            background: rgba(124, 58, 237, 0.1);
+            color: #7c3aed;
+            border-color: #7c3aed;
+        }
+
+        .nav-tab.active {
+            background: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+        }
+
+        .nav-tab-badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            margin-left: 6px;
+        }
+
+        .nav-tab.active .nav-tab-badge {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .messaging-nav-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-action-btn {
+            padding: 8px 12px;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-action-btn:hover {
+            background: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+        }
+
+        .nav-action-btn.primary {
+            background: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+        }
+
+        .nav-action-btn.primary:hover {
+            background: #6d28d9;
+            border-color: #6d28d9;
+        }
+
+
+
+        /* Context Switching Modal */
+        .context-switch-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .context-switch-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .context-switch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .context-switch-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f1f1f;
+            margin: 0;
+        }
+
+        .context-switch-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+        }
+
+        .context-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .context-option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #1f1f1f;
+            transition: all 0.3s ease;
+        }
+
+        .context-option:hover {
+            background: rgba(124, 58, 237, 0.05);
+            border-color: #7c3aed;
+            color: #7c3aed;
+        }
+
+        .context-option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #7c3aed;
+        }
+
+        .context-option-details {
+            flex: 1;
+        }
+
+        .context-option-title {
+            font-weight: 600;
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .context-option-description {
+            color: #6c757d;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .messaging-nav {
+                padding: 16px;
+            }
+
+            .messaging-nav-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .messaging-nav-stats {
+                flex-wrap: wrap;
+            }
+
+            .messaging-nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .messaging-nav-actions {
+                width: 100%;
+            }
+
+            .nav-action-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+
+    <!-- Main Navigation -->
+    <div class="messaging-nav">
+        <div class="messaging-nav-header">
+            <h3 class="messaging-nav-title">
+                <i class="bi bi-chat-dots me-2"></i>
+                Communication Hub
+            </h3>
+            <div class="messaging-nav-stats">
+                <div class="nav-stat unread">
+                    <i class="bi bi-circle-fill"></i>
+                    <span id="totalUnread">0</span> unread
+                </div>
+                <div class="nav-stat">
+                    <i class="bi bi-people"></i>
+                    <span id="activeConversations">0</span> active
+                </div>
+                <div class="nav-stat">
+                    <i class="bi bi-clock"></i>
+                    Last sync: <span id="lastSync">now</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="messaging-nav-tabs">
+            <a href="/messaging/" class="nav-tab {% if request.resolver_match.url_name == 'unified_messaging' %}active{% endif %}">
+                <i class="bi bi-chat-square-text me-1"></i>
+                All Messages
+                <span class="nav-tab-badge" id="allMessagesBadge">0</span>
+            </a>
+            <a href="/notifications/" class="nav-tab {% if request.resolver_match.url_name == 'unified_notifications' %}active{% endif %}">
+                <i class="bi bi-bell me-1"></i>
+                Notifications
+                <span class="nav-tab-badge" id="notificationsBadge">0</span>
+            </a>
+            <a href="/applicant/messages/" class="nav-tab {% if request.resolver_match.url_name == 'applicant_messages' %}active{% endif %}">
+                <i class="bi bi-file-person me-1"></i>
+                Applications
+                <span class="nav-tab-badge" id="applicationsBadge">0</span>
+            </a>
+            <a href="/network/" class="nav-tab {% if request.resolver_match.url_name == 'network_explorer' %}active{% endif %}">
+                <i class="bi bi-people me-1"></i>
+                Network
+            </a>
+        </div>
+
+        <div class="messaging-nav-actions">
+            <a href="{% url 'home' %}" class="nav-home-btn">
+                <i class="bi bi-house"></i>
+                Home
+            </a>
+            
+            <a href="/direct-messages-dashboard/" class="nav-action-btn">
+                <i class="bi bi-people"></i>
+                Investors
+            </a>
+            <button class="nav-action-btn" onclick="showContextSwitcher()">
+                <i class="bi bi-arrow-left-right"></i>
+                Switch Context
+            </button>
+            <button class="nav-action-btn" onclick="refreshAllData()">
+                <i class="bi bi-arrow-clockwise"></i>
+                Refresh
+            </button>
+            <a href="/browse-projects/" class="nav-action-btn">
+                <i class="bi bi-folder"></i>
+                Browse Projects
+            </a>
+        </div>
+    </div>
+
+
+
+    <!-- Context Switch Modal -->
+    <div class="context-switch-modal" id="contextSwitchModal">
+        <div class="context-switch-content">
+            <div class="context-switch-header">
+                <h4 class="context-switch-title">Switch Context</h4>
+                <button class="context-switch-close" onclick="hideContextSwitcher()">&times;</button>
+            </div>
+            
+            <div class="context-options" id="contextOptions">
+                <!-- Context options will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation component functionality
+        let navigationData = {
+            unreadMessages: 0,
+            unreadNotifications: 0,
+            unreadApplications: 0,
+            activeConversations: 0
+        };
+
+        // Initialize navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNavigation();
+            loadNavigationData();
+            
+            // Auto-refresh every 2 minutes to reduce server load
+            setInterval(loadNavigationData, 120000);
+        });
+
+        function initializeNavigation() {
+            // Setup event listeners
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.context-switch-modal') && !e.target.closest('.context-switch-content')) {
+                    hideContextSwitcher();
+                }
+            });
+
+            // Handle keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'm':
+                            e.preventDefault();
+                            window.location.href = '/messaging/';
+                            break;
+                        case 'n':
+                            e.preventDefault();
+                            window.location.href = '/notifications-center/';
+                            break;
+                        case 'a':
+                            e.preventDefault();
+                            window.location.href = '/applicant/messages/';
+                            break;
+                        case 'k':
+                            e.preventDefault();
+                            showContextSwitcher();
+                            break;
+                    }
+                }
+            });
+        }
+
+        // Load navigation data
+        async function loadNavigationData() {
+            try {
+                const response = await fetch('/api/navigation-data/', {
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    navigationData = data;
+                    updateNavigationUI();
+                }
+            } catch (error) {
+                console.error('Error loading navigation data:', error);
+            }
+        }
+
+        // Update navigation UI
+        function updateNavigationUI() {
+            const totalUnread = navigationData.unreadMessages + navigationData.unreadNotifications + navigationData.unreadApplications;
+            
+            // Update main stats
+            document.getElementById('totalUnread').textContent = totalUnread;
+            document.getElementById('activeConversations').textContent = navigationData.activeConversations;
+            document.getElementById('lastSync').textContent = 'now';
+            
+            // Update tab badges
+            updateBadge('allMessagesBadge', navigationData.unreadMessages);
+            updateBadge('notificationsBadge', navigationData.unreadNotifications);
+            updateBadge('applicationsBadge', navigationData.unreadApplications);
+            
+            // Update quick access badges
+            updateQuickAccessBadge('messagesBadge', navigationData.unreadMessages);
+            updateQuickAccessBadge('notifBadge', navigationData.unreadNotifications);
+            updateQuickAccessBadge('appsBadge', navigationData.unreadApplications);
+        }
+
+        // Update badge
+        function updateBadge(elementId, count) {
+            const badge = document.getElementById(elementId);
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'inline' : 'none';
+            }
+        }
+
+        // Update quick access badge
+        function updateQuickAccessBadge(elementId, count) {
+            const badge = document.getElementById(elementId);
+            if (badge) {
+                badge.style.display = count > 0 ? 'block' : 'none';
+            }
+        }
+
+        // Show context switcher
+        function showContextSwitcher() {
+            loadContextOptions();
+            document.getElementById('contextSwitchModal').style.display = 'flex';
+        }
+
+        // Hide context switcher
+        function hideContextSwitcher() {
+            document.getElementById('contextSwitchModal').style.display = 'none';
+        }
+
+        // Load context options
+        async function loadContextOptions() {
+            const options = [
+                {
+                    title: 'All Messages',
+                    description: 'Unified messaging interface',
+                    icon: 'bi-chat-dots',
+                    url: '/messaging/',
+                    badge: navigationData.unreadMessages
+                },
+                {
+                    title: 'Notification Center',
+                    description: 'All notifications and alerts',
+                    icon: 'bi-bell',
+                    url: '/notifications-center/',
+                    badge: navigationData.unreadNotifications
+                },
+                {
+                    title: 'Application Messages',
+                    description: 'Job application communications',
+                    icon: 'bi-file-person',
+                    url: '/applicant/messages/',
+                    badge: navigationData.unreadApplications
+                },
+                {
+                    title: 'AI Mentorship',
+                    description: 'Chat with AI mentor',
+                    icon: 'bi-robot',
+                    url: '/ai-mentorship/'
+                },
+                {
+                    title: 'Network Explorer',
+                    description: 'Discover and connect with users',
+                    icon: 'bi-people',
+                    url: '/network/'
+                },
+                {
+                    title: 'Analytics Dashboard',
+                    description: 'View communication insights',
+                    icon: 'bi-graph-up',
+                    url: '/analytics/'
+                }
+            ];
+
+            const container = document.getElementById('contextOptions');
+            container.innerHTML = options.map(option => `
+                <a href="${option.url}" class="context-option">
+                    <div class="context-option-icon">
+                        <i class="bi ${option.icon}"></i>
+                    </div>
+                    <div class="context-option-details">
+                        <h6 class="context-option-title">
+                            ${option.title}
+                            ${option.badge ? `<span class="nav-tab-badge">${option.badge}</span>` : ''}
+                        </h6>
+                        <p class="context-option-description">${option.description}</p>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        // Refresh all data
+        function refreshAllData() {
+            loadNavigationData();
+            
+            // Trigger refresh on current page
+            if (typeof loadConversations === 'function') {
+                loadConversations();
+            }
+            if (typeof loadNotifications === 'function') {
+                loadNotifications();
+            }
+            if (typeof refreshNotifications === 'function') {
+                refreshNotifications();
+            }
+            
+            // Show feedback
+            const refreshBtn = document.querySelector('[onclick="refreshAllData()"]');
+            const originalText = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<i class="bi bi-check-circle"></i> Refreshed';
+            setTimeout(() => {
+                refreshBtn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</div>

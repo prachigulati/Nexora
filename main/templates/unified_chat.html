@@ -1,0 +1,516 @@
+<!-- Unified Chat Modal Component -->
+<div class="unified-chat-modal" id="unifiedChatModal" style="display: none;">
+    <div class="unified-chat-content">
+        <div class="unified-chat-header">
+            <div class="chat-user-info">
+                <div class="chat-avatar" id="chatAvatar">
+                    <span id="chatInitials"></span>
+                </div>
+                <div class="chat-details">
+                    <h5 id="chatUserName">User Name</h5>
+                    <small id="chatProjectInfo">Project Info</small>
+                </div>
+            </div>
+            <button class="chat-close-btn" onclick="closeUnifiedChat()">&times;</button>
+        </div>
+        <div class="unified-chat-messages" id="unifiedChatMessages">
+            <!-- Messages will be loaded here -->
+        </div>
+        <div class="unified-chat-input">
+            <div class="chat-input-group">
+                <input type="text" id="unifiedChatInput" placeholder="Type your message..." onkeypress="handleUnifiedChatKeyPress(event)">
+                <button onclick="sendUnifiedMessage()">
+                    <i class="bi bi-send"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Unified Chat Modal Styles */
+.unified-chat-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.unified-chat-content {
+    width: 90%;
+    max-width: 800px;
+    height: 80%;
+    max-height: 600px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.unified-chat-header {
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #7c3aed;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    overflow: hidden;
+}
+
+.chat-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.chat-details h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.chat-details small {
+    opacity: 0.8;
+    font-size: 12px;
+}
+
+.chat-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.chat-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.unified-chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.unified-chat-input {
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
+    background: white;
+}
+
+.chat-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chat-input-group input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.chat-input-group input:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
+}
+
+.chat-input-group button {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: #7c3aed;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.chat-input-group button:hover {
+    background: #6d28d9;
+}
+
+/* Message Bubbles */
+.chat-message {
+    max-width: 70%;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message.sent {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.chat-message.received {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.message-bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.chat-message.sent .message-bubble {
+    background: #7c3aed;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-message.received .message-bubble {
+    background: white;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 4px;
+}
+
+.message-timestamp {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 4px;
+    padding: 0 4px;
+}
+
+.chat-message.sent .message-timestamp {
+    color: #7c3aed;
+}
+
+.chat-message.received .message-timestamp {
+    color: #64748b;
+}
+
+/* Empty State */
+.chat-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+}
+
+.chat-empty-state i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* Loading State */
+.chat-loading {
+    text-align: center;
+    padding: 20px;
+    color: #64748b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .unified-chat-content {
+        width: 95%;
+        height: 90%;
+        margin: 20px;
+    }
+    
+    .unified-chat-header {
+        padding: 15px;
+    }
+    
+    .unified-chat-messages {
+        padding: 15px;
+    }
+    
+    .unified-chat-input {
+        padding: 15px;
+    }
+    
+    .chat-message {
+        max-width: 85%;
+    }
+}
+</style>
+
+<script>
+// Unified Chat System
+let currentUnifiedConversation = null;
+let unifiedMessagePolling = null;
+
+// Open unified chat
+function openUnifiedChat(conversationId, userName, projectInfo, messageType, avatarUrl = null) {
+    // Find conversation data
+    if (typeof conversations !== 'undefined') {
+        currentUnifiedConversation = conversations.find(c => c.id === conversationId);
+    } else {
+        // Create a basic conversation object if conversations array is not available
+        currentUnifiedConversation = {
+            id: conversationId,
+            name: userName,
+            type: messageType,
+            project: projectInfo
+        };
+    }
+    
+    if (!currentUnifiedConversation) {
+        console.error('Conversation not found:', conversationId);
+        return;
+    }
+
+    // Set chat header info
+    document.getElementById('chatUserName').textContent = userName;
+    document.getElementById('chatProjectInfo').textContent = projectInfo;
+    
+    // Set avatar
+    const chatAvatar = document.getElementById('chatAvatar');
+    const chatInitials = document.getElementById('chatInitials');
+    
+    if (avatarUrl) {
+        chatAvatar.innerHTML = `<img src="${avatarUrl}" alt="${userName}">`;
+    } else {
+        chatInitials.textContent = userName.charAt(0).toUpperCase();
+        chatAvatar.innerHTML = `<span id="chatInitials">${userName.charAt(0).toUpperCase()}</span>`;
+    }
+
+    // Show modal
+    document.getElementById('unifiedChatModal').style.display = 'flex';
+
+    // Load messages
+    loadUnifiedChatMessages(conversationId);
+
+    // Mark as read
+    markUnifiedConversationAsRead(conversationId);
+
+    // Start polling
+    startUnifiedMessagePolling(conversationId);
+}
+
+// Close unified chat
+function closeUnifiedChat() {
+    document.getElementById('unifiedChatModal').style.display = 'none';
+    currentUnifiedConversation = null;
+    
+    // Stop polling
+    if (unifiedMessagePolling) {
+        clearInterval(unifiedMessagePolling);
+        unifiedMessagePolling = null;
+    }
+}
+
+// Load chat messages
+async function loadUnifiedChatMessages(conversationId) {
+    const container = document.getElementById('unifiedChatMessages');
+    container.innerHTML = '<div class="chat-loading"><i class="bi bi-three-dots"></i> Loading messages...</div>';
+    
+    try {
+        const response = await fetch(`/api/messages/${conversationId}/`, {
+            headers: {
+                'X-CSRFToken': getUnifiedCsrfToken()
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            displayUnifiedChatMessages(data.messages || []);
+        } else {
+            console.error('Failed to load messages');
+            container.innerHTML = '<div class="chat-empty-state"><i class="bi bi-exclamation-triangle"></i><p>Failed to load messages</p></div>';
+        }
+    } catch (error) {
+        console.error('Error loading messages:', error);
+        container.innerHTML = '<div class="chat-empty-state"><i class="bi bi-wifi-off"></i><p>Connection error</p></div>';
+    }
+}
+
+// Display chat messages
+function displayUnifiedChatMessages(messages) {
+    const container = document.getElementById('unifiedChatMessages');
+
+    if (messages.length === 0) {
+        container.innerHTML = `
+            <div class="chat-empty-state">
+                <i class="bi bi-chat-square-text"></i>
+                <p>No messages yet. Start the conversation!</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = messages.map(message => {
+        // Handle both is_sender and isSent field names
+        const isSent = message.is_sender || message.isSent;
+
+        // Format timestamp properly
+        let formattedTime = '';
+        if (message.timestamp) {
+            const date = new Date(message.timestamp);
+            formattedTime = date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        return `
+            <div class="chat-message ${isSent ? 'sent' : 'received'}">
+                <div class="message-bubble">
+                    ${message.content}
+                </div>
+                <div class="message-timestamp">${formattedTime}</div>
+            </div>
+        `;
+    }).join('');
+
+    // Scroll to bottom
+    container.scrollTop = container.scrollHeight;
+}
+
+// Send message
+async function sendUnifiedMessage() {
+    const input = document.getElementById('unifiedChatInput');
+    const content = input.value.trim();
+    
+    if (!content || !currentUnifiedConversation) return;
+
+    try {
+        const response = await fetch('/api/send-message/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getUnifiedCsrfToken()
+            },
+            body: JSON.stringify({
+                conversationId: currentUnifiedConversation.id,
+                content: content
+            })
+        });
+
+        if (response.ok) {
+            input.value = '';
+            // Reload messages
+            loadUnifiedChatMessages(currentUnifiedConversation.id);
+            
+            // Refresh conversations list if available
+            if (typeof loadConversations === 'function') {
+                loadConversations();
+            }
+        } else {
+            console.error('Failed to send message');
+            alert('Failed to send message. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Connection error. Please check your internet connection.');
+    }
+}
+
+// Handle key press
+function handleUnifiedChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendUnifiedMessage();
+    }
+}
+
+// Mark conversation as read
+async function markUnifiedConversationAsRead(conversationId) {
+    try {
+        await fetch(`/api/conversations/${conversationId}/mark-read/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getUnifiedCsrfToken()
+            }
+        });
+    } catch (error) {
+        console.error('Error marking conversation as read:', error);
+    }
+}
+
+// Start message polling
+function startUnifiedMessagePolling(conversationId) {
+    if (unifiedMessagePolling) {
+        clearInterval(unifiedMessagePolling);
+    }
+    
+    unifiedMessagePolling = setInterval(() => {
+        if (currentUnifiedConversation && currentUnifiedConversation.id === conversationId) {
+            loadUnifiedChatMessages(conversationId);
+        }
+    }, 30000); // Poll every 30 seconds to reduce server load
+}
+
+// Get CSRF token
+function getUnifiedCsrfToken() {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, 10) === 'csrftoken=') {
+                cookieValue = decodeURIComponent(cookie.substring(10));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('unifiedChatModal');
+    if (e.target === modal) {
+        closeUnifiedChat();
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (unifiedMessagePolling) {
+        clearInterval(unifiedMessagePolling);
+    }
+});
+</script>

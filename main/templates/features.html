@@ -1,0 +1,726 @@
+{% extends 'base.html' %}
+
+{% block title %}Features - Nexora{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --primary-dark: #6d28d9;
+    --background-light: #ffffff;
+    --background-gray: #f4f4ff;
+    --text-dark: #1f1f1f;
+    --text-muted: #6c757d;
+    --border-light: #e9ecef;
+  }
+
+  body {
+    background-color: var(--background-gray);
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(
+      135deg,
+      var(--primary) 0%,
+      var(--primary-dark) 100%
+    );
+    color: white;
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="1" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Feature Cards */
+  .feature-card {
+    background: var(--background-light);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-light);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(124, 58, 237, 0.2);
+  }
+
+  .feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  /* Demo Section */
+  .demo-section {
+    background: var(--background-light);
+    padding: 80px 0;
+  }
+
+  .demo-card {
+    background: var(--background-light);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-light);
+  }
+
+  .demo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(124, 58, 237, 0.15);
+  }
+
+  /* Process Steps */
+  .process-step {
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .process-step::after {
+    content: "";
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-light);
+    z-index: 1;
+  }
+
+  .process-step:last-child::after {
+    display: none;
+  }
+
+  /* Animation for feature icons */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .feature-icon {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .feature-card:nth-child(2) .feature-icon {
+    animation-delay: 0.5s;
+  }
+
+  .feature-card:nth-child(3) .feature-icon {
+    animation-delay: 1s;
+  }
+
+  /* Mobile navbar improvements */
+  @media (max-width: 991.98px) {
+    .process-step::after {
+      display: none;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav
+  class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top"
+>
+  <div class="container-fluid px-4">
+    <!-- Brand -->
+    <a
+      class="navbar-brand fw-bold fs-3"
+      href="{% url 'home' %}"
+      style="color: #7c3aed"
+    >
+      <i class="bi bi-hexagon-fill me-2"></i>Nexora
+    </a>
+    <!-- Mobile Toggle Button -->
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Center Navigation Links -->
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'home' %}">
+            <i class="bi bi-house-door me-1"></i>Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'about' %}">
+            <i class="bi bi-info-circle me-1"></i>About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'features' %}">
+            <i class="bi bi-star me-1"></i>Features
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'contact' %}">
+            <i class="bi bi-envelope me-1"></i>Contact
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3" href="{% url 'ai_mentorship' %}">
+            <i class="bi bi-robot me-1"></i>AI Mentorship
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold px-3 position-relative" href="/messaging">
+            <i class="bi bi-chat-dots me-1"></i>Messages
+            {% if unread_direct_messages_count > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+              {{ unread_direct_messages_count }}
+            </span>
+            {% endif %}
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      <!-- Right Side Actions -->
+      <div class="d-flex align-items-center gap-3">
+        {% if user.is_authenticated %}
+        <!-- Notifications -->
+        <a
+          href="{% url 'notifications' %}"
+          class="btn btn-outline-primary position-relative"
+          id="notificationBell"
+        >
+          <i class="bi bi-bell"></i>
+          {% if unread_notifications_count > 0 %}
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            id="notificationBadge"
+          >
+            {{ unread_notifications_count }}
+          </span>
+          {% endif %}
+        </a>
+        <!-- User Dropdown -->
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-person-circle me-2"></i><span>{{ user.get_full_name|default:user.username }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="bi bi-person me-2"></i>Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'settings' %}">
+                <i class="bi bi-gear me-2"></i>Settings
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <form action="{% url 'logout' %}" method="post" class="d-inline w-100">
+                {% csrf_token %}
+                <button class="dropdown-item text-danger" type="submit">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+        {% else %}
+        <!-- Login/Register buttons for non-authenticated users -->
+        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Login
+        </a>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">
+          <i class="bi bi-person-plus me-1"></i>Register
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container hero-content">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">
+          Revolutionary Features for Modern Entrepreneurs
+        </h1>
+        <p class="lead mb-4">
+          Discover the comprehensive suite of cutting-edge tools designed to accelerate your startup journey and connect you with the right opportunities.
+        </p>
+        <div class="d-flex gap-3">
+          <a href="{% url 'home' %}" class="btn btn-light btn-lg">
+            <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+          </a>
+          <a href="#features-overview" class="btn btn-outline-light btn-lg">
+            <i class="bi bi-arrow-down me-2"></i>Explore Features
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6 text-center">
+        <div class="position-relative">
+          <i class="bi bi-stars" style="font-size: 15rem; opacity: 0.2"></i>
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <i
+              class="bi bi-lightning-charge-fill"
+              style="font-size: 6rem"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Features -->
+<section id="features-overview" class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold" style="color: var(--primary)">
+        Core Features
+      </h2>
+      <p class="lead text-muted">
+        Everything you need to succeed in the startup ecosystem
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <!-- AI Mentorship -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-robot text-white fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-3" style="color: var(--primary)">
+            AI-Powered Mentorship
+          </h4>
+          <p class="text-muted mb-4">
+            Get personalized guidance from our advanced AI mentor that
+            analyzes your business model, market conditions, and provides
+            actionable insights 24/7.
+          </p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Business plan analysis
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Market research insights
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Strategic recommendations
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Real-time feedback
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Blockchain Trust -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-shield-check text-white fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-3" style="color: var(--primary)">
+            Blockchain Trust System
+          </h4>
+          <p class="text-muted mb-4">
+            Build and verify your reputation on-chain with our transparent
+            trust system that tracks your achievements and credibility
+            permanently.
+          </p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Immutable reputation
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Transparent history
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Verified achievements
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i>Trust
+              scoring
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Crypto Microfunding -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-currency-bitcoin text-white fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-3" style="color: var(--primary)">
+            Crypto Microfunding
+          </h4>
+          <p class="text-muted mb-4">
+            Access instant funding through our decentralized microfunding
+            system. Investors can support projects with any amount using
+            cryptocurrency.
+          </p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Instant transactions
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i>Low
+              fees
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Global accessibility
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i>Smart
+              contracts
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Global Network -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-globe text-white fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-3" style="color: var(--primary)">
+            Global Network
+          </h4>
+          <p class="text-muted mb-4">
+            Connect with entrepreneurs, investors, and mentors from around
+            the world. Break geographical barriers and access global
+            opportunities.
+          </p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Worldwide community
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Cross-border funding
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Cultural diversity
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i>24/7
+              availability
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Smart Matching -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-bullseye text-white fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-3" style="color: var(--primary)">
+            Smart Matching
+          </h4>
+          <p class="text-muted mb-4">
+            Our AI algorithm matches startups with the most suitable
+            investors and mentors based on industry, stage, and
+            compatibility factors.
+          </p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >AI-powered matching
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Industry expertise
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Stage-appropriate
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i>High
+              success rate
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Analytics Dashboard -->
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-graph-up text-white fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-3" style="color: var(--primary)">
+            Analytics Dashboard
+          </h4>
+          <p class="text-muted mb-4">
+            Track your progress with comprehensive analytics. Monitor
+            funding progress, engagement metrics, and performance indicators
+            in real-time.
+          </p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Real-time metrics
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Funding tracking
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Engagement insights
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle-fill text-success me-2"></i
+              >Performance reports
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="demo-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold mb-4">How Nexora Works</h2>
+      <p class="lead">Simple steps to transform your startup journey</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="step-number">1</div>
+          <h5 class="fw-bold mb-3">Create Your Profile</h5>
+          <p class="mb-0">
+            Sign up and create a comprehensive profile showcasing your
+            startup idea, team, and vision.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="step-number">2</div>
+          <h5 class="fw-bold mb-3">Get AI Mentorship</h5>
+          <p class="mb-0">
+            Receive personalized guidance from our AI mentor to refine your
+            business strategy and approach.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="step-number">3</div>
+          <h5 class="fw-bold mb-3">Connect & Match</h5>
+          <p class="mb-0">
+            Our smart matching system connects you with relevant investors
+            and mentors in your industry.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="step-number">4</div>
+          <h5 class="fw-bold mb-3">Secure Funding</h5>
+          <p class="mb-0">
+            Receive instant crypto microfunding and build your reputation on
+            the blockchain.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Demo -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold" style="color: var(--primary)">
+        Experience the Platform
+      </h2>
+      <p class="lead text-muted">See how our features work in action</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="demo-card text-center">
+          <i
+            class="bi bi-chat-dots-fill fs-1 mb-3"
+            style="color: var(--primary)"
+          ></i>
+          <h5 class="fw-bold mb-3">AI Chat Demo</h5>
+          <p class="mb-3">
+            Try our AI mentor and get instant feedback on your business
+            ideas.
+          </p>
+          <a href="{% url 'ai_mentorship' %}" class="btn btn-outline-dark"
+            >Try AI Chat</a
+          >
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="demo-card text-center">
+          <i
+            class="bi bi-graph-up-arrow fs-1 mb-3"
+            style="color: var(--primary)"
+          ></i>
+          <h5 class="fw-bold mb-3">Analytics Preview</h5>
+          <p class="mb-3">
+            Explore our comprehensive analytics dashboard with sample data.
+          </p>
+          <a
+            href="{% url 'analytics_dashboard' %}"
+            class="btn btn-outline-dark"
+            >View Dashboard</a
+          >
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="demo-card text-center">
+          <i
+            class="bi bi-people-fill fs-1 mb-3"
+            style="color: var(--primary)"
+          ></i>
+          <h5 class="fw-bold mb-3">Network Explorer</h5>
+          <p class="mb-3">
+            Browse our global network of entrepreneurs and investors.
+          </p>
+          <a
+            href="{% url 'network_explorer' %}"
+            class="btn btn-outline-dark"
+            >Explore Network</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section
+  class="py-5"
+  style="
+    background: linear-gradient(
+      135deg,
+      var(--primary) 0%,
+      var(--primary-dark) 100%
+    );
+  "
+>
+  <div class="container text-center text-white">
+    <h2 class="display-5 fw-bold mb-4">
+      Ready to Transform Your Startup Journey?
+    </h2>
+    <p class="lead mb-4">
+      Join thousands of entrepreneurs who are already building the future
+      with Nexora.
+    </p>
+    <div class="d-flex gap-3 justify-content-center">
+      <a href="{% url 'home' %}" class="btn btn-light btn-lg">
+        <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
+      </a>
+      <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
+        <i class="bi bi-envelope me-2"></i>Contact Sales
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

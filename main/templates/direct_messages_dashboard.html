@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Messages - Nexora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #5b21b6;
+        }
+        
+        .conversation-item {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .conversation-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+        }
+        
+        .conversation-item.unread {
+            background-color: #f8f9ff;
+            border-color: var(--primary);
+        }
+        
+        .unread-badge {
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .last-message {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .message-time {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+        
+        .project-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be handled by the template that includes this or by direct navbar include -->
+   
+    
+    <div class="container my-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2>
+                            <i class="bi bi-chat-dots me-2" style="color: var(--primary);"></i>
+                            Direct Messages
+                        </h2>
+                        <p class="text-muted mb-0">Messages from investors interested in your projects</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary me-2">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
+                        <a href="/messaging/" class="btn btn-outline-primary me-2">
+                            <i class="bi bi-chat-dots me-1"></i>All Messages
+                        </a>
+                        <a href="{% url 'notifications' %}" class="btn btn-primary">
+                            <i class="bi bi-bell me-1"></i>Notifications
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-envelope-open display-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">{{ conversations|length }}</h4>
+                            <small>Total Conversations</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-exclamation-circle display-6 text-warning"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">{{ total_unread }}</h4>
+                            <small class="text-muted">Unread Messages</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-briefcase display-6 text-info"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">{{ user_projects|length }}</h4>
+                            <small class="text-muted">Your Projects</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-people display-6 text-success"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">{{ conversations|length }}</h4>
+                            <small class="text-muted">Interested Investors</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conversations List -->
+        <div class="row">
+            <div class="col-12">
+                {% if conversations %}
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="bi bi-chat-square-text me-2"></i>
+                                Recent Conversations
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            {% for conversation in conversations %}
+                            <div class="conversation-item p-4 {% if conversation.unread_count > 0 %}unread{% endif %}" 
+                                 onclick="openUnifiedChat('direct_{{ conversation.project.id }}_{{ conversation.partner.id }}', '{{ conversation.partner.username }}', 'on your project: {{ conversation.project.name|escapejs }}', 'direct', '{% if conversation.partner.userprofile.avatar %}{{ conversation.partner.userprofile.avatar.url }}{% endif %}')">
+                                <div class="d-flex align-items-start">
+                                    <!-- Avatar -->
+                                    <div class="me-3">
+                                        {% if conversation.partner.userprofile.avatar %}
+                                            <img src="{{ conversation.partner.userprofile.avatar.url }}" 
+                                                 alt="{{ conversation.partner.username }}" 
+                                                 class="avatar-circle" style="object-fit: cover;">
+                                        {% else %}
+                                            <div class="avatar-circle">
+                                                {{ conversation.partner.username|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Conversation Details -->
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-1">{{ conversation.partner.username }}</h6>
+                                                <div class="project-badge">{{ conversation.project.name }}</div>
+                                            </div>
+                                            <div class="text-end">
+                                                {% if conversation.unread_count > 0 %}
+                                                    <span class="unread-badge">{{ conversation.unread_count }}</span>
+                                                {% endif %}
+                                                <div class="message-time mt-1">
+                                                    {{ conversation.last_message.timestamp|timesince }} ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if conversation.last_message %}
+                                        <div class="last-message">
+                                            <strong>
+                                                {% if conversation.last_message.sender == user %}You:{% else %}{{ conversation.last_message.sender.username }}:{% endif %}
+                                            </strong>
+                                            {{ conversation.last_message.content|truncatechars:100 }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Action Arrow -->
+                                    <div class="ms-3 align-self-center">
+                                        <i class="bi bi-chevron-right text-muted"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if not forloop.last %}
+                            <hr class="my-0">
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <i class="bi bi-chat-square-text display-1 mb-4"></i>
+                        <h4>No Messages Yet</h4>
+                        <p class="mb-4">When investors are interested in your projects, their messages will appear here.</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Create Your First Project
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include the Direct Chat Modal -->
+    {% include 'message.html' %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openProjectChat(projectId, partnerName, projectName) {
+            // Use unified chat system
+            openUnifiedChat(`direct_${projectId}_${partnerName}`, partnerName, `on your project: ${projectName}`, 'direct');
+        }
+        
+        // Auto-refresh every 2 minutes to check for new messages (reduced frequency)
+        setInterval(function() {
+            // Only refresh if no modal is open
+            if (!document.querySelector('.modal.show')) {
+                location.reload();
+            }
+        }, 120000); // 2 minutes instead of 30 seconds
+    </script>
+
+    <!-- Include Unified Chat Component -->
+    {% include 'unified_chat.html' %}
+</body>
+</html>

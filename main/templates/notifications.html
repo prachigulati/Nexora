@@ -1,0 +1,1063 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Messages - Nexora</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #7c3aed;
+        --primary-light: #a78bfa;
+        --primary-dark: #6d28d9;
+        --background-light: #ffffff;
+        --background-gray: #f4f4ff;
+        --text-dark: #1f1f1f;
+        --text-muted: #6c757d;
+        --border-light: #e9ecef;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+      }
+
+      body {
+        background-color: var(--background-gray);
+        font-family: "Segoe UI", sans-serif;
+        color: var(--text-dark);
+      }
+
+      .project-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid #e9ecef;
+      }
+
+      .project-card:hover,
+      .project-card.active {
+        background-color: #f8f9ff;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+      }
+
+      .applicant-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid #e9ecef;
+      }
+
+      .applicant-card:hover {
+        background-color: #f8f9ff;
+        transform: translateY(-1px);
+      }
+
+      .applicant-card:not(.cursor-pointer) {
+        opacity: 0.8;
+      }
+
+      .applicant-card:not(.cursor-pointer):hover {
+        background-color: transparent;
+        transform: none;
+      }
+
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .status-pending {
+        background-color: var(--warning);
+      }
+      .status-approved {
+        background-color: var(--success);
+      }
+      .status-rejected {
+        background-color: var(--danger);
+      }
+
+      .message-area {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 1rem;
+        background: var(--background-light);
+        position: relative;
+        box-shadow: 0 2px 10px rgba(124, 58, 237, 0.05);
+      }
+
+      /* Message row styling */
+      .message-row {
+        display: flex;
+        width: 100%;
+        padding: 4px 8px;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        margin-bottom: 8px;
+      }
+
+      .message-row.sent {
+        justify-content: flex-end;
+      }
+
+      .message-row.received {
+        justify-content: flex-start;
+      }
+
+      .message-bubble {
+        display: inline-block;
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal; /* ✅ KEY FIX */
+        box-sizing: border-box;
+        position: relative;
+        animation: messageSlideIn 0.3s ease-out;
+      }
+
+      @keyframes messageSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message-bubble.message-sent {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        color: white;
+        border-bottom-right-radius: 4px;
+        display: inline-block;
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal; /* ✅ KEY FIX */
+        box-sizing: border-box;
+      }
+      
+
+      .message-bubble.message-received {
+        background: #f1f3f4;
+        color: #333;
+        border-bottom-left-radius: 4px;
+       display: inline-block;
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal; /* ✅ KEY FIX */
+        box-sizing: border-box;
+
+      }
+
+      .message-time {
+        font-size: 10px;
+        margin-top: 4px;
+        text-align: right;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .message-bubble.message-received .message-time {
+        color: #888;
+        text-align: left;
+      }
+
+      .message-content {
+        margin-bottom: 4px;
+        line-height: 1.4;
+         max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal; /* ✅ KEY FIX */
+        box-sizing: border-box;
+        
+      }
+
+      /* Improve message area layout */
+      .message-area {
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .empty-messages {
+        text-align: center;
+        color: var(--text-muted);
+        padding: 3rem 1rem;
+        font-style: italic;
+      }
+
+      .message-input-container {
+        border-top: 1px solid var(--border-light);
+      }
+
+      /* Enhanced Button Styling */
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      }
+
+      .btn-success {
+        background-color: var(--success);
+        border-color: var(--success);
+        transition: all 0.3s ease;
+      }
+
+      .btn-success:hover {
+        background-color: #0d9488;
+        border-color: #0d9488;
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        background-color: var(--danger);
+        border-color: var(--danger);
+        transition: all 0.3s ease;
+      }
+
+      .btn-danger:hover {
+        background-color: #dc2626;
+        border-color: #dc2626;
+        transform: translateY(-1px);
+      }
+
+      /* Enhanced Card Styling */
+      .card {
+        border: none;
+        border-radius: 12px;
+        background: var(--background-light);
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.08);
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+      }
+
+      .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 12px 12px 0 0 !important;
+      }
+
+      .card-body {
+        padding: 1rem;
+        background: var(--background-light);
+        border-radius: 0 0 12px 12px;
+      }
+
+      .message-input {
+        border: 1px solid var(--border-light);
+        border-radius: 25px;
+        padding: 0.75rem 1rem;
+        resize: none;
+        transition: all 0.3s ease;
+        background: var(--background-light);
+      }
+
+      .message-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+        outline: none;
+      }
+
+      /* Form Control Focus */
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
+      }
+
+      /* Tab Styling */
+      .nav-tabs .nav-link {
+        color: var(--text-muted);
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .nav-tabs .nav-link.active {
+        color: var(--primary);
+        background-color: var(--background-light);
+        border-bottom: 2px solid var(--primary);
+      }
+
+      .nav-tabs .nav-link:hover {
+        color: var(--primary);
+        border-color: transparent;
+      }
+
+      .send-button {
+        background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .send-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a
+          class="navbar-brand fw-bold"
+          href="{% url 'home' %}"
+          style="color: var(--primary)"
+        >
+          <i class="bi bi-hexagon-fill me-2"></i>Nexora
+        </a>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="{% url 'home' %}">
+            <i class="bi bi-house-door me-1"></i>Home
+          </a>
+          <a class="nav-link" href="{% url 'applicant_messages' %}">
+            <i class="bi bi-envelope me-1"></i>My Applications
+          </a>
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+            >
+              <i class="bi bi-person-circle me-1"></i>{{ user.username }}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'settings' %}"
+                  >Settings</a
+                >
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <form
+                  action="{% url 'logout' %}"
+                  method="post"
+                  class="d-inline"
+                >
+                  {% csrf_token %}
+                  <button class="dropdown-item text-danger" type="submit">
+                    Logout
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h2>
+                <i class="bi bi-bell me-2" style="color: var(--primary)"></i>
+                Notifications
+              </h2>
+              <p class="text-muted">
+                Manage your projects and applications
+              </p>
+            </div>
+            <div>
+              <a href="{% url 'home' %}" class="btn btn-outline-primary me-2">
+                <i class="bi bi-house-door me-1"></i>Home
+              </a>
+              <a href="/messaging/" class="btn btn-outline-primary me-2">
+                <i class="bi bi-chat-dots me-1"></i>Messaging
+              </a>
+              <a href="{% url 'applicant_messages' %}" class="btn btn-primary">
+                <i class="bi bi-envelope me-1"></i>View My Applications
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <ul class="nav nav-tabs" id="notificationTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="applicant-messages-tab" data-bs-toggle="tab" data-bs-target="#applicant-messages" type="button" role="tab">
+                <i class="bi bi-envelope me-2"></i>Applicant Messages
+             
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content" id="notificationTabsContent">
+        <!-- Applicant Messages Tab -->
+        <div class="tab-pane fade show active" id="applicant-messages" role="tabpanel">
+
+          <!-- Search and Filter Form -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+              <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                  <label for="search_project" class="form-label">Search Project</label>
+                  <select class="form-select" id="search_project" name="search_project">
+                    <option value="">All Projects</option>
+                    {% for project in all_user_projects %}
+                    <option value="{{ project.name }}" {% if search_project == project.name %}selected{% endif %}>
+                      {{ project.name }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="filter_status" class="form-label">Filter by Status</label>
+                  <select class="form-select" id="filter_status" name="filter_status">
+                    <option value="">All Status</option>
+                    <option value="pending" {% if filter_status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="approved" {% if filter_status == 'approved' %}selected{% endif %}>Approved</option>
+                    <option value="rejected" {% if filter_status == 'rejected' %}selected{% endif %}>Rejected</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="search_applicant" class="form-label">Search Applicant</label>
+                  <input type="text" class="form-control" id="search_applicant" name="search_applicant"
+                         placeholder="Username..." value="{{ search_applicant }}">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">&nbsp;</label>
+                  <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-search"></i>
+                    </button>
+                    <a href="{% url 'notifications' %}" class="btn btn-outline-secondary">
+                      <i class="bi bi-arrow-clockwise"></i>
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {% if grouped_apps %}
+          <div class="row">
+        <!-- Projects Sidebar -->
+        <div class="col-lg-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-folder me-2"></i>Select Project
+              </h5>
+            </div>
+            <div class="card-body p-0">
+              {% for project, apps in grouped_apps %}
+              <div
+                class="project-card p-3 border-bottom"
+                onclick="showProject('{{ project.id }}')"
+              >
+                <h6 class="mb-1">{{ project.name }}</h6>
+                <small class="text-muted">{{ apps|length }} application{{ apps|length|pluralize }}</small>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Applications and Messages -->
+        <div class="col-lg-9">
+          {% for project, apps in grouped_apps %}
+          <div
+            id="project-{{ project.id }}"
+            class="project-content"
+            style="display: none"
+          >
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-light">
+                <h5 class="mb-0">{{ project.name }}</h5>
+                <small class="text-muted"
+                  >{{ project.description|default:"No description." }}</small
+                >
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Positions:</h6>
+                    {% for app in apps %}
+                    <span class="badge bg-secondary me-1"
+                      >{{ app.position.title }}</span
+                    >
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% if apps %}
+            <div class="row">
+              <!-- Applicants List -->
+              <div class="col-lg-5">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">
+                      <i class="bi bi-people me-2"></i>Applicants
+                    </h6>
+                  </div>
+                  <div
+                    class="card-body p-0"
+                    style="max-height: 500px; overflow-y: auto"
+                  >
+                    {% for app in apps %}
+                    <div
+                      class="applicant-card p-3 border-bottom {% if app.status == 'approved' %}cursor-pointer{% endif %}"
+                      {% if app.status == 'approved' %}onclick="openUnifiedChat('app_{{ app.id }}', '{{ app.applicant.username }}', 'applied to your project: {{ app.position.project.name }}', 'applicant', '{% if app.applicant.userprofile.avatar %}{{ app.applicant.userprofile.avatar.url }}{% endif %}')"{% endif %}
+                    >
+                      <div class="d-flex align-items-center mb-2">
+                        <div
+                          class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                          style="width: 40px; height: 40px"
+                        >
+                          <span class="text-white fw-bold"
+                            >{{ app.applicant.username|first|upper }}</span
+                          >
+                        </div>
+                        <div class="flex-grow-1">
+                          <h6 class="mb-0">{{ app.applicant.username }}</h6>
+                          <small class="text-muted"
+                            >{{ app.created_at|naturaltime }}</small
+                          >
+                          <div class="small text-muted">{{ app.position.title }}</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="d-flex flex-column align-items-end gap-1">
+                            <span class="badge bg-info">APPLICANT</span>
+                            {% if app.status == 'approved' %}
+                            <span class="badge bg-success">APPROVED</span>
+                            {% elif app.status == 'rejected' %}
+                            <span class="badge bg-danger">REJECTED</span>
+                            {% else %}
+                            <span class="badge bg-warning">PENDING APPROVAL</span>
+                            {% endif %}
+                          </div>
+                          <div class="small text-muted mt-1">{{ app.created_at|time:"H:i" }}</div>
+                          {% if app.has_unread %}
+                          <div class="badge bg-danger rounded-pill mt-1">{{ app.unread_count }}</div>
+                          {% endif %}
+                        </div>
+                      </div>
+
+                      {% if app.status == 'pending' %}
+                      <div class="d-flex gap-2 mb-2">
+                        <button
+                          class="btn btn-sm btn-success"
+                          onclick="updateStatus({{ app.id }}, 'approved')"
+                        >
+                          <i class="bi bi-check"></i> Approve
+                        </button>
+                        <button
+                          class="btn btn-sm btn-danger"
+                          onclick="updateStatus({{ app.id }}, 'rejected')"
+                        >
+                          <i class="bi bi-x"></i> Reject
+                        </button>
+                      </div>
+                      {% endif %}
+
+                      <div class="text-muted small mb-2">
+                        {{ app.reason|default:"—" }}
+                      </div>
+
+                      {% if app.status == 'approved' %}
+                      <div class="small text-success">
+                        <i class="bi bi-chat-dots me-1"></i>Click to start messaging
+                      </div>
+                      {% elif app.status == 'rejected' %}
+                      <div class="small text-danger">
+                        <i class="bi bi-x-circle me-1"></i>Application rejected
+                      </div>
+                      {% else %}
+                      <div class="small text-warning">
+                        <i class="bi bi-clock me-1"></i>Awaiting your decision
+                      </div>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+            {% else %}
+            <div class="card border-0 shadow-sm">
+              <div class="card-body text-center py-5">
+                <i class="bi bi-inbox display-4 text-muted mb-3"></i>
+                <h5>No applicants yet</h5>
+                <p class="text-muted">
+                  Publish a project to start receiving applications
+                </p>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+              <i class="bi bi-folder-x display-4 text-muted mb-3"></i>
+              <h4>No projects published</h4>
+              <p class="text-muted">
+                Create your first project to start receiving applications
+              </p>
+              <a href="{% url 'home' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Create Project
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+        </div>
+
+        <!-- Browse Projects Tab -->
+        <div class="tab-pane fade" id="browse-projects" role="tabpanel">
+          <div class="row">
+            <div class="col-12">
+              <h4 class="mb-4">
+                <i class="bi bi-folder me-2" style="color: var(--primary)"></i>
+                My Published Projects
+              </h4>
+
+              {% if grouped_apps %}
+              <div class="row">
+                {% for project, apps in grouped_apps %}
+                <div class="col-lg-6 mb-4">
+                  <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                          <h5 class="card-title mb-1">{{ project.name }}</h5>
+                          <p class="text-muted small mb-2">{{ project.description|truncatechars:100 }}</p>
+                          <div class="d-flex gap-2 mb-2">
+                            <span class="badge bg-light text-dark border">{{ project.category }}</span>
+                            <span class="badge bg-light text-dark border">{{ project.stage }}</span>
+                          </div>
+                        </div>
+                        <div class="text-end">
+                          <small class="text-muted">{{ project.created_at|timesince }} ago</small>
+                        </div>
+                      </div>
+
+                      <div class="row text-center">
+                        <div class="col-4">
+                          <div class="border-end">
+                            <div class="fw-bold text-primary">{{ project.positions.count }}</div>
+                            <small class="text-muted">Position{{ project.positions.count|pluralize }}</small>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="border-end">
+                            <div class="fw-bold text-success">{{ apps|length }}</div>
+                            <small class="text-muted">Application{{ apps|length|pluralize }}</small>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="fw-bold text-info">${{ project.funding_goal|floatformat:0 }}</div>
+                          <small class="text-muted">Goal</small>
+                        </div>
+                      </div>
+
+                      <div class="mt-3">
+                        <a href="{% url 'notifications' %}" class="btn btn-outline-primary btn-sm me-2">
+                          <i class="bi bi-envelope me-1"></i>View Messages
+                        </a>
+                        <a href="{% url 'home' %}#project-{{ project.id }}" class="btn btn-primary btn-sm">
+                          <i class="bi bi-eye me-1"></i>View Project
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="text-center py-5">
+                <i class="bi bi-folder-x display-4 text-muted mb-3"></i>
+                <h4>No projects published</h4>
+                <p class="text-muted">Create your first project to start receiving applications</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">
+                  <i class="bi bi-plus-circle me-2"></i>Create Project
+                </a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let currentApplicationId = null;
+      let currentProjectId = null;
+
+      function showProject(projectId) {
+        // Hide all project contents
+        document.querySelectorAll(".project-content").forEach((content) => {
+          content.style.display = "none";
+        });
+
+        // Remove active class from all project cards
+        document.querySelectorAll(".project-card").forEach((card) => {
+          card.classList.remove("active");
+        });
+
+        // Show selected project content
+        document.getElementById("project-" + projectId).style.display = "block";
+
+        // Add active class to selected project card
+        event.currentTarget.classList.add("active");
+
+        currentProjectId = projectId;
+      }
+
+      function loadMessages(applicationId) {
+        // Check if application is approved first
+        const applicationCard = event.currentTarget;
+        const statusBadge = applicationCard.querySelector('.badge');
+        const status = statusBadge.textContent.toLowerCase().trim();
+
+        if (status !== 'approved') {
+          // Show message that application needs to be approved
+          const messageArea = document.getElementById(`messageArea-${currentProjectId}`);
+          messageArea.innerHTML = `
+            <div class="empty-messages">
+              <i class="bi bi-lock display-4 mb-3 text-warning"></i>
+              <h6>Application Not Approved</h6>
+              <p>This application is currently <strong>${status}</strong>.</p>
+              <p>Messaging is only available for approved applications.</p>
+              <small class="text-muted">Please approve the application to enable messaging.</small>
+            </div>
+          `;
+          // Hide message input
+          const messageInput = document.getElementById(`messageInput-${currentProjectId}`);
+          if (messageInput) {
+            messageInput.style.display = "none";
+          }
+          return;
+        }
+
+        currentApplicationId = applicationId;
+
+        // Update form application ID
+        const applicationIdInput = document.querySelector(
+          `#project-${currentProjectId} .applicationId`
+        );
+        if (applicationIdInput) {
+          applicationIdInput.value = applicationId;
+        }
+
+        // Show message input
+        const messageInput = document.getElementById(
+          `messageInput-${currentProjectId}`
+        );
+        if (messageInput) {
+          messageInput.style.display = "block";
+        }
+
+        // Highlight selected applicant
+        document.querySelectorAll(".applicant-card").forEach((card) => {
+          card.classList.remove("bg-light");
+        });
+        applicationCard.classList.add("bg-light");
+
+        // Load message history using unified API
+        fetch(`/api/messages/app_${applicationId}/`, {
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+          }
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const messageArea = document.getElementById(
+              `messageArea-${currentProjectId}`
+            );
+            if (data.messages && data.messages.length > 0) {
+              messageArea.innerHTML = "";
+              data.messages.forEach((message) => {
+                // Handle both is_sender and isSent field names
+                const isSent = message.is_sender || message.isSent;
+
+                // Format timestamp properly
+                let formattedTime = '';
+                if (message.timestamp) {
+                  const date = new Date(message.timestamp);
+                  formattedTime = date.toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  });
+                }
+
+                // Create message row
+                const messageRow = document.createElement("div");
+                messageRow.className = `message-row ${isSent ? 'sent' : 'received'}`;
+
+                const messageDiv = document.createElement("div");
+                messageDiv.className = `message-bubble ${
+                  isSent ? "message-sent" : "message-received"
+                }`;
+                messageDiv.innerHTML = `
+                  <div class="message-content">${message.content}</div>
+                  <div class="message-time">${formattedTime}</div>
+                `;
+
+                messageRow.appendChild(messageDiv);
+                messageArea.appendChild(messageRow);
+              });
+            } else {
+              messageArea.innerHTML =
+                '<div class="empty-messages text-center" style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;"><i class="bi bi-chat-square-text display-4 mb-3 text-muted"></i><h6 class="text-muted">No messages yet</h6><p class="text-muted small mb-0">Start the conversation!</p></div>';
+            }
+            messageArea.scrollTop = messageArea.scrollHeight;
+          })
+          .catch((error) => {
+            console.error("Error loading messages:", error);
+          });
+      }
+
+      function updateStatus(applicationId, status) {
+        // Get CSRF token
+        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]");
+        if (!csrfToken) {
+          console.error("CSRF token not found");
+          alert("Security token not found. Please refresh the page and try again.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("application_id", applicationId);
+        formData.append("status", status);
+        formData.append("csrfmiddlewaretoken", csrfToken.value);
+
+        console.log("Sending request with:", {
+          application_id: applicationId,
+          status: status,
+          csrf_token: csrfToken.value ? "present" : "missing"
+        });
+
+        fetch("/applications/update_status/", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log('Response data:', data);
+            if (data.success) {
+              const applicantCard = event.currentTarget.closest(".applicant-card");
+
+              // Update the status badge
+              const statusBadge = applicantCard.querySelector(".badge");
+              if (statusBadge) {
+                statusBadge.className = `badge status-${status} mb-1`;
+                statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+              }
+
+              // Remove the approve/reject buttons
+              const buttonContainer = applicantCard.querySelector(".d-flex.gap-2");
+              if (buttonContainer) {
+                buttonContainer.remove();
+              }
+
+              // Update the status message at the bottom
+              const statusMessage = applicantCard.querySelector(".small:last-child");
+              if (statusMessage) {
+                if (status === 'approved') {
+                  statusMessage.innerHTML = '<i class="bi bi-chat-dots me-1"></i>Click to start messaging';
+                  statusMessage.className = 'small text-success';
+                  // Make the card clickable
+                  applicantCard.classList.add('cursor-pointer');
+                  applicantCard.setAttribute('onclick', `openUnifiedChat('app_${applicationId}', '${applicantCard.querySelector('h6').textContent}', 'applied to your project', 'applicant')`);
+                } else {
+                  statusMessage.innerHTML = '<i class="bi bi-x-circle me-1"></i>Application rejected';
+                  statusMessage.className = 'small text-danger';
+                }
+              }
+
+              // Show success message
+              const successAlert = document.createElement('div');
+              successAlert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+              successAlert.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+              successAlert.innerHTML = `
+                <i class="bi bi-check-circle me-2"></i>Application ${status} successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              `;
+              document.body.appendChild(successAlert);
+
+              // Auto-remove after 3 seconds
+              setTimeout(() => {
+                if (successAlert.parentNode) {
+                  successAlert.remove();
+                }
+              }, 3000);
+            } else {
+              console.error("Backend returned success: false", data);
+              alert("Failed to update status: " + (data.error || 'Unknown error'));
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating status:", error);
+            console.error("Error details:", error.message);
+            alert("Failed to update status. Please try again.");
+          });
+      }
+
+      // Get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Handle message sending
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".messageForm").forEach((form) => {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            // Use unified message API
+            const messageContent = formData.get('content');
+
+            fetch("/api/send-unified-message/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector(
+                  "[name=csrfmiddlewaretoken]"
+                ).value,
+              },
+              body: JSON.stringify({
+                conversationId: `app_${currentApplicationId}`,
+                content: messageContent
+              })
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data.success) {
+                  // Clear the input field
+                  this.querySelector(".messageContent").value = "";
+
+                  // Add the message to the UI immediately for better UX
+                  const messageArea = document.getElementById(`messageArea-${currentProjectId}`);
+                  const messageRow = document.createElement("div");
+                  messageRow.className = "message-row sent";
+
+                  const messageDiv = document.createElement("div");
+                  messageDiv.className = "message-bubble message-sent";
+                  messageDiv.innerHTML = `
+                    <div class="message-content">${data.message.content}</div>
+                    <div class="message-time">${data.message.timestamp}</div>
+                  `;
+
+                  messageRow.appendChild(messageDiv);
+                  messageArea.appendChild(messageRow);
+                  messageArea.scrollTop = messageArea.scrollHeight;
+
+                  // Also reload messages to ensure consistency
+                  setTimeout(() => loadMessages(currentApplicationId), 100);
+                } else {
+                  alert("Failed to send message: " + (data.error || 'Unknown error'));
+                }
+              })
+              .catch((error) => {
+                console.error("Error sending message:", error);
+                alert("Failed to send message. Please try again.");
+              });
+          });
+        });
+
+        // Show first project by default if available
+        const firstProject = document.querySelector(".project-card");
+        if (firstProject) {
+          firstProject.click();
+        }
+      });
+    </script>
+    <!-- Include Unified Chat Component -->
+    {% include 'unified_chat.html' %}
+  </body>
+</html>
